@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 409ce8544b7bc874381cef70bb7a633c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 306126
+  packageName: Spline Audio Source
+  packageVersion: 0.9
+  assetPath: Assets/SplineAudioSource/Demo/Models&Materials/Metal.mat
+  uploadId: 732293

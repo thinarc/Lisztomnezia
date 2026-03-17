@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 63ed8016728cace43a7c74ec77b97661
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 306126
+  packageName: Spline Audio Source
+  packageVersion: 0.9
+  assetPath: Assets/SplineAudioSource/Prefabs/Spline Audio Source.prefab
+  uploadId: 732293

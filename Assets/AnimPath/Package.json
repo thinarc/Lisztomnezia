@@ -1,0 +1,12 @@
+{
+    "name": "com.svcompany.animpath",
+    "version": "1.0.0",
+    "displayName": "AnimPath",
+    "description": "A plugin for to visualize Animation path for Unity",
+    "unity": "2021.1",
+    "dependencies": {},
+    "author": {
+        "name": "Sourabh vishwakarma",
+        "email": "sv92295351@gmail.com"
+    }
+}

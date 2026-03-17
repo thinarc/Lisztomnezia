@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 5354c41cfe56f43439c3970c683b9b05
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 306126
+  packageName: Spline Audio Source
+  packageVersion: 0.9
+  assetPath: Assets/SplineAudioSource/Demo/Models&Materials/Prefabs/LightPost.prefab
+  uploadId: 732293

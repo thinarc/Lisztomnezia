@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 65f04774dd6f6f3478b87f7fcf741133
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 306126
+  packageName: Spline Audio Source
+  packageVersion: 0.9
+  assetPath: Assets/SplineAudioSource/Demo/Models&Materials/Prefabs/Cylinder.prefab
+  uploadId: 732293

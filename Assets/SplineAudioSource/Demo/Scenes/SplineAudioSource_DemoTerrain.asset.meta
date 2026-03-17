@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5192d7fd5cdfad74a979149018a625a4
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 306126
+  packageName: Spline Audio Source
+  packageVersion: 0.9
+  assetPath: Assets/SplineAudioSource/Demo/Scenes/SplineAudioSource_DemoTerrain.asset
+  uploadId: 732293

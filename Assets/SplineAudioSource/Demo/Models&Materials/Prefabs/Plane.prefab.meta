@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 96dd6d826b36e7144a0d41b51088be88
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 306126
+  packageName: Spline Audio Source
+  packageVersion: 0.9
+  assetPath: Assets/SplineAudioSource/Demo/Models&Materials/Prefabs/Plane.prefab
+  uploadId: 732293

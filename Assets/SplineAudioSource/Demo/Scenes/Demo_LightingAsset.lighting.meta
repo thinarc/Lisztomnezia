@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d47a20327bc1ab049a2d788d8c5e389e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 4890085278179872738
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 306126
+  packageName: Spline Audio Source
+  packageVersion: 0.9
+  assetPath: Assets/SplineAudioSource/Demo/Scenes/Demo_LightingAsset.lighting
+  uploadId: 732293

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ec1ae4e15f0f42147bcf759aee3ee4d7
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297188
+  packageName: Animation Path Visualizer
+  packageVersion: 1.2.0
+  assetPath: Assets/AnimPath/Package.json
+  uploadId: 824212

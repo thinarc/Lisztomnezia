@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ea15447cbe049d24ab846bef7b8f8836
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297188
+  packageName: Animation Path Visualizer
+  packageVersion: 1.2.0
+  assetPath: Assets/AnimPath/demo_utils/New Animator Controller.controller
+  uploadId: 824212

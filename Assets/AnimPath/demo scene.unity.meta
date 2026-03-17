@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c179a59f1b204c547b2597f69b935725
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297188
+  packageName: Animation Path Visualizer
+  packageVersion: 1.2.0
+  assetPath: Assets/AnimPath/demo scene.unity
+  uploadId: 824212

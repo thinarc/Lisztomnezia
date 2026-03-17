@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 4ec6f4a3705415149b0ef8c8a696d498
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297188
+  packageName: Animation Path Visualizer
+  packageVersion: 1.2.0
+  assetPath: Assets/AnimPath/Core/MotionPath.cs
+  uploadId: 824212

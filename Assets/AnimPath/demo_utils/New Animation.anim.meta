@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0ed035f1afffaef48aa93a63aad0dc01
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297188
+  packageName: Animation Path Visualizer
+  packageVersion: 1.2.0
+  assetPath: Assets/AnimPath/demo_utils/New Animation.anim
+  uploadId: 824212

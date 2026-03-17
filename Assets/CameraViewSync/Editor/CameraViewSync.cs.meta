@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 3ad30f113a67b0f4e9f6100495fa6769
+AssetOrigin:
+  serializedVersion: 1
+  productId: 322538
+  packageName: CamViewSync
+  packageVersion: 1.0
+  assetPath: Assets/CameraViewSync/Editor/CameraViewSync.cs
+  uploadId: 762102
