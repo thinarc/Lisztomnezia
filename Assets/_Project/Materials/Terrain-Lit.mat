@@ -21,10 +21,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Terrain-Lit
-  m_Shader: {fileID: 4800000, guid: f2d3798c7faa4374b992cdfcab62cb40, type: 3}
+  m_Shader: {fileID: 4800000, guid: 0803c241834332942abfcbd27c498b46, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _ENABLESINEROTATE_ON
+  - _ENABLEVIBRATE_ON
+  - _ENABLEWIGGLE_ON
   - _SHADERFADING_NONE
   - _SHADERSPACE_UV
   - _TEXTURELAYER1SHEETTOGGLE_ON
@@ -268,8 +271,8 @@ Material:
     - _BurnWidth: 0.1
     - _CamouflageAnimationToggle: 0
     - _CamouflageContrast: 1
-    - _CamouflageDensityA: 0.4
-    - _CamouflageDensityB: 0.4
+    - _CamouflageDensityA: 0.72
+    - _CamouflageDensityB: 0.53
     - _CamouflageFade: 1
     - _CamouflageSmoothnessA: 0.2
     - _CamouflageSmoothnessB: 0.2
@@ -352,7 +355,7 @@ Material:
     - _EnableShine: 0
     - _EnableSineGlow: 0
     - _EnableSineMove: 0
-    - _EnableSineRotate: 0
+    - _EnableSineRotate: 1
     - _EnableSineScale: 0
     - _EnableSmoke: 0
     - _EnableSmoothPixelArt: 0
@@ -368,8 +371,8 @@ Material:
     - _EnableUVRotate: 0
     - _EnableUVScale: 0
     - _EnableUVScroll: 0
-    - _EnableVibrate: 0
-    - _EnableWiggle: 0
+    - _EnableVibrate: 1
+    - _EnableWiggle: 1
     - _EnableWind: 0
     - _EnableWorldTiling: 0
     - _EnchantedBrightness: 1
@@ -450,7 +453,7 @@ Material:
     - _MetallicMapToggle: 0
     - _Mode: 0
     - _NegativeFade: 1
-    - _NormalIntensity: 1
+    - _NormalIntensity: 0
     - _NumLayersCount: 1
     - _OcclusionStrength: 1
     - _OuterOutlineDistortionToggle: 0
@@ -529,7 +532,7 @@ Material:
     - _SineMoveFade: 1
     - _SineRotateAngle: 15
     - _SineRotateFade: 1
-    - _SineRotateFrequency: 1
+    - _SineRotateFrequency: 0.2
     - _SineScaleFrequency: 2
     - _SmokeAlpha: 1
     - _SmokeDarkEdge: 1
@@ -609,11 +612,11 @@ Material:
     - _ToggleUnscaledTime: 0
     - _UVDistortFade: 1
     - _UVDistortMaskToggle: 0
-    - _UVRotateSpeed: 1
+    - _UVRotateSpeed: 0.005
     - _UVSec: 0
     - _UseUIAlphaClip: 0
     - _VertexTintFirst: 0
-    - _VibrateFade: 1
+    - _VibrateFade: 0.04
     - _VibrateFrequency: 100
     - _VibrateOffset: 0.04
     - _VibrateRotation: 4
@@ -621,7 +624,7 @@ Material:
     - _WiggleFixedGroundToggle: 0
     - _WiggleFrequency: 2
     - _WiggleOffset: 0.02
-    - _WiggleSpeed: 2
+    - _WiggleSpeed: 0.4
     - _WindFlip: 0
     - _WindHighQualityNoise: 0
     - _WindIsParallax: 0
@@ -649,17 +652,17 @@ Material:
     - _BurnInsideColor: {r: 0.75, g: 0.5625, b: 0.525, a: 0}
     - _BurnInsideNoiseColor: {r: 3084.047, g: 257.0039, b: 0, a: 0}
     - _BurnInsideNoiseScale: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _BurnPosition: {r: 0, g: 5, b: 0, a: 0}
+    - _BurnPosition: {r: 2.52, g: 5, b: 0, a: 0}
     - _BurnSwirlNoiseScale: {r: 0.1, g: 0.1, b: 0, a: 0}
-    - _CamouflageBaseColor: {r: 0.7450981, g: 0.7254902, b: 0.5686274, a: 0}
-    - _CamouflageColorA: {r: 0.62745106, g: 0.5882353, b: 0.43137258, a: 0}
-    - _CamouflageColorB: {r: 0.47058815, g: 0.43137258, b: 0.31372547, a: 0}
+    - _CamouflageBaseColor: {r: 0.6509434, g: 0.6424143, b: 0.5741812, a: 0}
+    - _CamouflageColorA: {r: 0.5785867, g: 0.6226415, b: 0.6226415, a: 1}
+    - _CamouflageColorB: {r: 0.49056602, g: 0.48883054, b: 0.48362404, a: 0}
     - _CamouflageDistortionIntensity: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _CamouflageDistortionScale: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _CamouflageDistortionSpeed: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _CamouflageNoiseScaleA: {r: 0.25, g: 0.25, b: 0, a: 0}
-    - _CamouflageNoiseScaleB: {r: 0.25, g: 0.25, b: 0, a: 0}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _CamouflageNoiseScaleB: {r: 4.86, g: 3.44, b: 0, a: 0}
+    - _Color: {r: 0.15094376, g: 0.15094376, b: 0.15094376, a: 1}
     - _ColorReplaceFromColor: {r: 0, g: 0, b: 0, a: 0}
     - _ColorReplaceToColor: {r: 0, g: 0, b: 0.2, a: 0}
     - _CustomFadeNoiseScale: {r: 1, g: 1, b: 0, a: 0}
@@ -691,7 +694,7 @@ Material:
     - _FullAlphaDissolveNoiseScale: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _FullDistortionDistortion: {r: 0.2, g: 0.2, b: 0, a: 0}
     - _FullDistortionNoiseScale: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _FullGlowDissolveEdgeColor: {r: 11.98431, g: 0.627451, b: 0.627451, a: 0}
+    - _FullGlowDissolveEdgeColor: {r: 0, g: 1, b: 0.6021638, a: 1}
     - _FullGlowDissolveNoiseScale: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _GlitchDistortion: {r: 0.1, g: 0, b: 0, a: 0}
     - _GlitchDistortionScale: {r: 0, g: 3, b: 0, a: 0}
