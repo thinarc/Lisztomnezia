@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
   m_TableCollectionName: Localization
   m_TableCollectionNameGuidString: d5a971939e474d3408b95092e57f1e50
-  m_Entries: []
+  m_Entries:
+  - m_Id: 1136366694948864
+    m_Key: collect_touch
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

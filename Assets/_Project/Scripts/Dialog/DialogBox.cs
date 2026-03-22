@@ -8,6 +8,7 @@ namespace _Project.Scripts.Dialog
 
         private void OnTriggerEnter(Collider other)
         {
+            if (message == null) message = "no message";
             DialogController.Instance.ShowMessage(message);
         }
 

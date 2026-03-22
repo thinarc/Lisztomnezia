@@ -121,14 +121,24 @@ namespace EvolveGames
                 
                 float distX = lookXLimit - Mathf.Abs(rotationX);
                 float factorX = Mathf.Clamp01(distX / edgeSlowZone);
+                
+                float dirX = Mathf.Sign(mouseY);
+                float towardLimitX = Mathf.Sign(rotationX);
 
-                rotationX += mouseY * lookSpeed * factorX * 2.4f;
+                float finalFactorX = (dirX == towardLimitX) ? factorX : 1;
+
+                rotationX += mouseY * lookSpeed * finalFactorX;
                 rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
                 
                 float distY = lookYLimit - Mathf.Abs(rotationY);
                 float factorY = Mathf.Clamp01(distY / edgeSlowZone);
 
-                rotationY += mouseX * lookSpeed * factorY;
+                float dirY = Mathf.Sign(mouseX);
+                float towardLimitY = Mathf.Sign(rotationY);
+
+                float finalFactorY = (dirY == towardLimitY) ? factorY : 1;
+
+                rotationY += mouseX * lookSpeed * finalFactorY;
                 rotationY = Mathf.Clamp(rotationY, -lookYLimit, lookYLimit);
                 
                 Camera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);

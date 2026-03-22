@@ -1,3 +1,4 @@
+using _Code.Scripts.VFX;
 using _Project.Scripts.Sense;
 using EvolveGames;
 using UnityEngine;
@@ -13,8 +14,17 @@ namespace _Project.Scripts.Rabbit
         {
             if (other.CompareTag("Player"))
             {
-                other.GetComponent<PlayerController>().canMove = false;
-                print(transform.name);
+                // other.GetComponent<PlayerController>().canMove = false;
+                ParticleSystem_FogAvoidPlayer.Instances.ForEach(p => p.NewView(transform));
+            }
+        }
+        
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                // other.GetComponent<PlayerController>().canMove = false;
+                ParticleSystem_FogAvoidPlayer.Instances.ForEach(p => p.ReturnView());
             }
         }
     }

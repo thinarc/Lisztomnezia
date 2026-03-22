@@ -1383,12 +1383,12 @@ GameObject:
   - component: {fileID: 36148824}
   - component: {fileID: 36148827}
   m_Layer: 0
-  m_Name: Rabbit
+  m_Name: collect_touch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &36148824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1468,7 +1468,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 36148823}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.09662226, y: -0, z: -0, w: 0.99532115}
+  m_LocalRotation: {x: 0.09662227, y: -0, z: -0, w: 0.99532115}
   m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
@@ -1522,7 +1522,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e6d895424e9442a959d511694ad6ae3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Dialog.DialogBox
-  message: hi ya krolik
 --- !u!114 &36148830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1537,9 +1536,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
   m_StringReference:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:d5a971939e474d3408b95092e57f1e50
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 1136366694948864
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -1559,7 +1558,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
   references:
     version: 2
     RefIds: []
@@ -13819,7 +13818,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &424857106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58854,8 +58853,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2126003815}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.04943143, y: 0.09022363, z: 0.004483718, w: 0.994684}
-  m_LocalPosition: {x: 5.105035, y: 3.8069234, z: 27.909086}
+  m_LocalRotation: {x: 0.019376611, y: 0.05936912, z: -0.0011526231, w: 0.99804735}
+  m_LocalPosition: {x: 3.58, y: -0.193, z: 29.985}
   m_LocalScale: {x: 0.3, y: 0.30000004, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -64352,8 +64351,8 @@ Transform:
   m_GameObject: {fileID: 8557640644999899120}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.52333, y: -0.0050016684, z: 56.8}
-  m_LocalScale: {x: 0.39, y: 0.39, z: 0.39}
+  m_LocalPosition: {x: -2, y: 0, z: 60}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 462979646}

@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 namespace PinePie.AnimPath
 {
     [AddComponentMenu("PinePie/AnimPath")]
@@ -283,3 +284,5 @@ namespace PinePie.AnimPath
 
 
 }
+
+#endif

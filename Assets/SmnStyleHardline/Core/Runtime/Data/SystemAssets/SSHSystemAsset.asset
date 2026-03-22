@@ -23,7 +23,7 @@ MonoBehaviour:
     EnvironmentLightIntensity: 0.17187198
     EnvironmentLightInfluence: 0.34
   Skybox:
-    BaseColor: {r: 0.098039225, g: 0.09411766, b: 0.08627451, a: 1}
+    BaseColor: {r: 0.009433985, g: 0.009241152, b: 0.008855485, a: 1}
     AccentColor: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
     StarsColor: {r: 0, g: 0, b: 0, a: 0}
     BandIntensity: 1.08768
