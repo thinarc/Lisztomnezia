@@ -14,7 +14,7 @@ namespace _Project.Scripts.Rabbit
         {
             if (other.CompareTag("Player"))
             {
-                // other.GetComponent<PlayerController>().canMove = false;
+                other.GetComponent<PlayerController>().canMove = false;
                 ParticleSystem_FogAvoidPlayer.Instances.ForEach(p => p.NewView(transform));
             }
         }
@@ -23,7 +23,7 @@ namespace _Project.Scripts.Rabbit
         {
             if (other.CompareTag("Player"))
             {
-                // other.GetComponent<PlayerController>().canMove = false;
+                other.GetComponent<PlayerController>().canMove = false;
                 ParticleSystem_FogAvoidPlayer.Instances.ForEach(p => p.ReturnView());
             }
         }
