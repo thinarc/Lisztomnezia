@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{edfa295c-9bb1-41ff-8af9-a6ddaa9a697e}">
+		<property name="assetPath">
+			<value>Footsteps/Step_Slush6-2.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.49666666666666665</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{1213e71b-38b3-42c2-b235-e284bde02aa1}</destination>
+		</relationship>
+	</object>
+</objects>
