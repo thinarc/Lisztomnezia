@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{02298562-4a57-4e2d-a1df-cf70aa54d983}">
+	<object class="AudioFile" id="{aa6c3bfd-6af7-4b97-b97b-52a924493c0a}">
 		<property name="assetPath">
-			<value>Footsteps/Step_Slush8-2.wav</value>
+			<value>Footsteps/1 6-Step_Slush5-2 [2026-03-24 160938].wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>
@@ -11,7 +11,7 @@
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>0.31052083333333336</value>
+			<value>0.6875</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{1213e71b-38b3-42c2-b235-e284bde02aa1}</destination>
