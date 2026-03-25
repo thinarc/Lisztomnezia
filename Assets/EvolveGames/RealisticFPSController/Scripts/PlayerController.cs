@@ -17,8 +17,8 @@ namespace EvolveGames
         [SerializeField, Range(2, 20)] float RuningSpeed = 4.0f;
         [SerializeField, Range(0, 20)] float jumpSpeed = 6.0f;
         [SerializeField, Range(0.01f, 10)] float lookSpeed = 2.0f;
-        [SerializeField, Range(10, 120)] float lookXLimit = 80.0f;
-        [SerializeField, Range(10, 120)] float lookYLimit = 80.0f;
+        [SerializeField, Range(0, 120)] float lookXLimit = 80.0f;
+        [SerializeField, Range(0, 120)] float lookYLimit = 80.0f;
         [Space(20)]
         [Header("Advance")]
         [SerializeField] float RunningFOV = 65.0f;
@@ -118,31 +118,39 @@ namespace EvolveGames
             {
                 float mouseX = Input.GetAxis("Mouse X");
                 float mouseY = -Input.GetAxis("Mouse Y");
-                
+
+// ===== X (вертикаль) =====
+                float deltaX = mouseY * lookSpeed;
+                float nextX = rotationX + deltaX;
+
                 float distX = lookXLimit - Mathf.Abs(rotationX);
                 float factorX = Mathf.Clamp01(distX / edgeSlowZone);
-                
-                float dirX = Mathf.Sign(mouseY);
-                float towardLimitX = Mathf.Sign(rotationX);
 
-                float finalFactorX = (dirX == towardLimitX) ? factorX : 1;
+// движемся ли к границе
+                bool goingToLimitX = Mathf.Abs(nextX) > Mathf.Abs(rotationX);
 
-                rotationX += mouseY * lookSpeed * finalFactorX;
+                float finalFactorX = goingToLimitX ? factorX : 1f;
+
+                rotationX += deltaX * finalFactorX;
                 rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
-                
+
+// ===== Y (горизонталь) =====
+                float deltaY = mouseX * lookSpeed;
+                float nextY = rotationY + deltaY;
+
                 float distY = lookYLimit - Mathf.Abs(rotationY);
                 float factorY = Mathf.Clamp01(distY / edgeSlowZone);
 
-                float dirY = Mathf.Sign(mouseX);
-                float towardLimitY = Mathf.Sign(rotationY);
+                bool goingToLimitY = Mathf.Abs(nextY) > Mathf.Abs(rotationY);
 
-                float finalFactorY = (dirY == towardLimitY) ? factorY : 1;
+                float finalFactorY = goingToLimitY ? factorY : 1f;
 
-                rotationY += mouseX * lookSpeed * finalFactorY;
+                rotationY += deltaY * finalFactorY;
                 rotationY = Mathf.Clamp(rotationY, -lookYLimit, lookYLimit);
-                
+
+// ===== применение =====
                 Camera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-                HCamera.transform.rotation = Quaternion.Euler(0, rotationY, 0);
+                HCamera.transform.localRotation = Quaternion.Euler(0, rotationY, 0);
 
                 if (isRunning && Moving) cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, RunningFOV, SpeedToFOV * Time.deltaTime);
                 else cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, InstallFOV, SpeedToFOV * Time.deltaTime);

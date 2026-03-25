@@ -8930,8 +8930,8 @@ MonoBehaviour:
   RuningSpeed: 2.6
   jumpSpeed: 0
   lookSpeed: 0.2
-  lookXLimit: 24
-  lookYLimit: 18
+  lookXLimit: 12
+  lookYLimit: 16
   RunningFOV: 65
   SpeedToFOV: 4
   CroughHeight: 1
