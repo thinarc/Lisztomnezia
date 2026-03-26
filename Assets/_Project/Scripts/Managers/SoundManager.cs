@@ -1,8 +1,12 @@
+using _Project.Scripts.Sound;
+using UnityEngine;
+
 namespace _Project.Scripts.Managers
 {
-    public class SoundManager
+    public class SoundManager : MonoBehaviour
     {
         public static SoundManager Instance { get; private set; }
+        public MusicLoop MusicLoop { get; private set; }
         
         private float _bgVolume;
 
@@ -28,12 +32,15 @@ namespace _Project.Scripts.Managers
             }
         }
 
-        public void Initialize()
+        public void Start()
         {
             Instance = this;
             
             _bgVolume = 1f;
             _sfxVolume = 0.75f;
+
+            MusicLoop = new MusicLoop();
+            MusicLoop.Initialize();
         }
     }
 }

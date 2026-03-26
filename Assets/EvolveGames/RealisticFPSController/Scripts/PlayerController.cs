@@ -1,13 +1,13 @@
-﻿//by EvolveGames
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace EvolveGames
 {
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
+        public float Velocity => characterController.velocity.magnitude;
+        public bool targetView;
+        
         [Header("PlayerController")]
         [SerializeField] public Transform Camera;
         [SerializeField] public Transform HCamera;
@@ -17,8 +17,8 @@ namespace EvolveGames
         [SerializeField, Range(2, 20)] float RuningSpeed = 4.0f;
         [SerializeField, Range(0, 20)] float jumpSpeed = 6.0f;
         [SerializeField, Range(0.01f, 10)] float lookSpeed = 2.0f;
-        [SerializeField, Range(0, 120)] float lookXLimit = 80.0f;
-        [SerializeField, Range(0, 120)] float lookYLimit = 80.0f;
+        [SerializeField, Range(0, 120)] float lookXLimit = 12f;
+        [SerializeField, Range(0, 120)] float lookYLimit = 16f;
         [Space(20)]
         [Header("Advance")]
         [SerializeField] float RunningFOV = 65.0f;
@@ -118,8 +118,7 @@ namespace EvolveGames
             {
                 float mouseX = Input.GetAxis("Mouse X");
                 float mouseY = -Input.GetAxis("Mouse Y");
-
-// ===== X (вертикаль) =====
+                
                 float deltaX = mouseY * lookSpeed;
                 float nextX = rotationX + deltaX;
 
@@ -131,10 +130,15 @@ namespace EvolveGames
 
                 float finalFactorX = goingToLimitX ? factorX : 1f;
 
-                rotationX += deltaX * finalFactorX;
+                if (!targetView) rotationX += deltaX * finalFactorX;
+                else
+                {
+                    rotationX += (deltaX * 0.4f) * finalFactorX; // 8.23f
+                    if (Mathf.Abs(rotationX) - 8.23f > 0.5f) rotationX = Mathf.MoveTowards(rotationX, 8.23f, Time.deltaTime * Random.Range(32, 36) * 4f);
+                    else rotationX = Mathf.MoveTowards(rotationX, Random.Range(7.4f, 8.7f), Time.deltaTime * 24);
+                }
                 rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
-
-// ===== Y (горизонталь) =====
+                
                 float deltaY = mouseX * lookSpeed;
                 float nextY = rotationY + deltaY;
 
@@ -145,10 +149,15 @@ namespace EvolveGames
 
                 float finalFactorY = goingToLimitY ? factorY : 1f;
 
-                rotationY += deltaY * finalFactorY;
+                if (!targetView) rotationY += deltaY * finalFactorY;
+                else
+                {
+                    rotationY += (deltaY * 0.4f) * finalFactorY; // -2.24f
+                    if (Mathf.Abs(rotationY) - 2.24f > 0.5f) rotationY = Mathf.MoveTowards(rotationY, -2.24f, Time.deltaTime * Random.Range(24, 28) * 2f);
+                    else rotationY = Mathf.MoveTowards(rotationY, Random.Range(-2.9f, -1.6f), Time.deltaTime * 24);
+                }
                 rotationY = Mathf.Clamp(rotationY, -lookYLimit, lookYLimit);
-
-// ===== применение =====
+                
                 Camera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
                 HCamera.transform.localRotation = Quaternion.Euler(0, rotationY, 0);
 

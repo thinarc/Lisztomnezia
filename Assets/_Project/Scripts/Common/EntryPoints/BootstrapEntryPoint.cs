@@ -11,7 +11,7 @@ namespace _Project.Scripts.Common.EntryPoints
         {
             Instance = this;
             DontDestroyOnLoad(this);
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(2);
         }
     }
 }
