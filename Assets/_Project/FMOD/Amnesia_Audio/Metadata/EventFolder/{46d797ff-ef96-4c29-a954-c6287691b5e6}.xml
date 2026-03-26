@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="EventFolder" id="{46d797ff-ef96-4c29-a954-c6287691b5e6}">
+		<property name="name">
+			<value>QTE Sound</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ab0f654e-8343-4567-aba4-762b14c1f028}</destination>
+		</relationship>
+	</object>
+</objects>

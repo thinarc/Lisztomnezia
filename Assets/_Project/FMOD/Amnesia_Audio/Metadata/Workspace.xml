@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="Workspace" id="{b74112a5-8439-4213-8973-72423113fb5d}">
+		<property name="builtBanksOutputDirectory">
+			<value>../../GitHub/Lisztomnezia/Assets/StreamingAssets</value>
+		</property>
+		<relationship name="masterEventFolder">
+			<destination>{ab0f654e-8343-4567-aba4-762b14c1f028}</destination>
+		</relationship>
+		<relationship name="masterTagFolder">
+			<destination>{b7cffcef-78e1-4fe9-82ea-47d050bb94f9}</destination>
+		</relationship>
+		<relationship name="masterEffectPresetFolder">
+			<destination>{f69f8830-24e8-48a4-81d2-c3c0c9013595}</destination>
+		</relationship>
+		<relationship name="masterParameterPresetFolder">
+			<destination>{69960fd1-dce5-439e-b5b4-d07b53b37962}</destination>
+		</relationship>
+		<relationship name="masterBankFolder">
+			<destination>{93e0eaed-a5ad-4c3f-9c76-8bf434d65c1c}</destination>
+		</relationship>
+		<relationship name="masterSandboxFolder">
+			<destination>{af4f1689-e74d-449d-81ef-c5138d70194e}</destination>
+		</relationship>
+		<relationship name="masterAssetFolder">
+			<destination>{cb79bd6d-1720-49ca-9f52-1842a35868bf}</destination>
+		</relationship>
+		<relationship name="mixer">
+			<destination>{9c1ebc41-eaaa-422a-93ef-e65708a7eefc}</destination>
+		</relationship>
+		<relationship name="profilerSessionFolder">
+			<destination>{97538562-18de-4a59-9538-4529fe1be2cc}</destination>
+		</relationship>
+		<relationship name="platforms">
+			<destination>{00ecda37-174f-4202-829c-f7d6aadbb794}</destination>
+		</relationship>
+	</object>
+</objects>
