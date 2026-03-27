@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{c22f37c4-d433-4be2-89c9-2c9550c816c9}">
 		<property name="assetPath">
 			<value>Footsteps/1 3-Step_Slush8-2 [2026-03-24 160950].wav</value>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{9f6490da-9d7d-4406-b58d-9080e304af23}">
 		<property name="assetPath">
 			<value>Music/JustNoise.wav</value>

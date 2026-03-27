@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="EventFolder" id="{46d797ff-ef96-4c29-a954-c6287691b5e6}">
 		<property name="name">
 			<value>QTE Sound</value>
