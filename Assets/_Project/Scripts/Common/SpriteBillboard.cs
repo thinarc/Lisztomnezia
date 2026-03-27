@@ -5,10 +5,12 @@ namespace _Project.Scripts.Render
     [ExecuteAlways]
     public class SpriteBillboard : MonoBehaviour
     {
-        private const float MaxUpdateDistance = 10f;
+        private const float MaxUpdateDistance = 25f;
 
         private Camera _cam;
         private float _sqrMaxDistance;
+        
+        private bool _updatedPos;
 
         private void Awake()
         {
@@ -38,9 +40,9 @@ namespace _Project.Scripts.Render
             Vector3 camPos = _cam.transform.position;
             Vector3 objPos = transform.position;
             float sqrDistance = (camPos - objPos).sqrMagnitude;
-            if (sqrDistance > _sqrMaxDistance)
-                return;
-
+            if (sqrDistance > _sqrMaxDistance) return;
+            
+            _updatedPos = true;
             Vector3 direction = camPos - objPos;
             transform.rotation = Quaternion.LookRotation(-direction);
 

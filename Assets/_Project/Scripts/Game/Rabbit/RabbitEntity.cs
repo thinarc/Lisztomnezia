@@ -1,4 +1,5 @@
 using _Code.Scripts.VFX;
+using _Project.Scripts.osu_;
 using _Project.Scripts.Sense;
 using DG.Tweening;
 using EvolveGames;
@@ -27,6 +28,8 @@ namespace _Project.Scripts.Rabbit
             
             _sprite.DOFade(1, 0.4f).SetEase(Ease.OutQuad);
             player.targetView = true;
+            
+            OsuController.Instance.RunGame();
         }
 
         private void HideView(PlayerController player)
