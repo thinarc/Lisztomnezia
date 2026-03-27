@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,7 @@ namespace _Project.Scripts.osu_
             
             _raw = GetComponent<RawImage>();
             _raw.material.SetFloat("_FadingFade", 0);
+            _raw.material.SetFloat("_GaussianBlurFade", 0);
         }
         
         public async void RunGame()
@@ -27,12 +29,21 @@ namespace _Project.Scripts.osu_
             await UniTask.NextFrame();
             gameScreen.SetActive(false);
             
+            _ = UniTask.WaitWhile(() =>
+            {
+                var val = Mathf.MoveTowards(_raw.material.GetFloat("_GaussianBlurFade"), 1, Time.deltaTime * Random.Range(0.64f, 0.86f));
+                _raw.material.SetFloat("_GaussianBlurFade", val);
+                return !Mathf.Approximately(val, 1);
+            });
+            
             await UniTask.WaitWhile(() =>
             {
-                var val = Mathf.MoveTowards(_raw.material.GetFloat("_FadingFade"), 1, Time.deltaTime * Random.Range(0.4f, 0.7f));
+                var val = Mathf.MoveTowards(_raw.material.GetFloat("_FadingFade"), 1, Time.deltaTime * Random.Range(0.8f, 0.96f));
                 _raw.material.SetFloat("_FadingFade", val);
                 return !Mathf.Approximately(val, 1);
             });
+            
+            _raw.GetComponent<CanvasGroup>().DOFade(0, 0.4f).SetEase(Ease.OutQuad);
         }
         
         // private async void OnPrepared(VideoPlayer vp)

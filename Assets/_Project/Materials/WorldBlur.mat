@@ -12,7 +12,6 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - PIXELSNAP_ON
   - _ENABLEGAUSSIANBLUR_ON
   - _ENABLEINKSPREAD_ON
   - _ENABLEPINGPONGGLOW_ON
@@ -25,7 +24,6 @@ Material:
   - _SHADERSPACE_UV
   - _TEXTURELAYER1SHEETTOGGLE_ON
   - _TEXTURELAYER2SHEETTOGGLE_ON
-  - _TOGGLEUNSCALEDTIME_ON
   m_InvalidKeywords:
   - _SOURCEALPHADISSOLVEINVERT_ON
   m_LightmapFlags: 4
@@ -128,7 +126,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - PixelSnap: 1
+    - PixelSnap: 0
     - _AddColorContrast: 0.5
     - _AddColorContrastToggle: 0
     - _AddColorFade: 1
@@ -337,9 +335,9 @@ Material:
     - _PixelsPerUnit: 32
     - _PoisonDensity: 3
     - _PoisonFade: 1
-    - _PoisonNoiseBrightness: 1.4
-    - _PoisonRecolorFactor: 0.5
-    - _PoisonShiftSpeed: 0.2
+    - _PoisonNoiseBrightness: 1.52
+    - _PoisonRecolorFactor: 0.4
+    - _PoisonShiftSpeed: 0.36
     - _RainbowBrightness: 2
     - _RainbowContrast: 1
     - _RainbowDensity: 0.5
@@ -449,7 +447,7 @@ Material:
     - _ToggleTimeFPS: 0
     - _ToggleTimeFrequency: 0
     - _ToggleTimeSpeed: 0
-    - _ToggleUnscaledTime: 1
+    - _ToggleUnscaledTime: 0
     - _UVDistortFade: 0.24
     - _UVDistortMaskToggle: 0
     - _UVRotateSpeed: 1
@@ -564,7 +562,7 @@ Material:
     - _PixelOutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _PixelOutlineTextureSpeed: {r: 0.5, g: 0, b: 0, a: 0}
     - _PoisonColor: {r: 0.72305536, g: 0.5840786, b: 0.42326775, a: 1}
-    - _PoisonNoiseScale: {r: 0.16, g: 0.24, b: 0, a: 0}
+    - _PoisonNoiseScale: {r: 0.13, g: 0.21, b: 0, a: 0}
     - _PoisonNoiseSpeed: {r: 0, g: -0.2, b: 0, a: 0}
     - _RainbowCenter: {r: 0, g: 0, b: 0, a: 0}
     - _RainbowNoiseScale: {r: 0.2, g: 0.2, b: 0, a: 0}

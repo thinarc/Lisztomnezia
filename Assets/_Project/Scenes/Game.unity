@@ -19171,6 +19171,7 @@ GameObject:
   m_Component:
   - component: {fileID: 707750065}
   - component: {fileID: 707750068}
+  - component: {fileID: 707750069}
   - component: {fileID: 707750067}
   - component: {fileID: 707750066}
   m_Layer: 5
@@ -19247,6 +19248,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.osu_.OsuController
   gameScreen: {fileID: 1583129726}
+--- !u!225 &707750069
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707750064}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &709329298
 GameObject:
   m_ObjectHideFlags: 0
