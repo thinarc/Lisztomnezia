@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{463c5254-90ca-462b-9ad5-0fb889aef02b}">
+		<property name="assetPath">
+			<value>Music/Music of QTE/The Last Efforts.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>163.33333333333334</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{cb79bd6d-1720-49ca-9f52-1842a35868bf}</destination>
+		</relationship>
+	</object>
+</objects>

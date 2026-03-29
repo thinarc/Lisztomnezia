@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{b29929d1-4415-4158-a2f5-c8ba03476afc}">
+		<property name="assetPath">
+			<value>Appears/Girls Appears.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>10.5576875</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{cb79bd6d-1720-49ca-9f52-1842a35868bf}</destination>
+		</relationship>
+	</object>
+</objects>

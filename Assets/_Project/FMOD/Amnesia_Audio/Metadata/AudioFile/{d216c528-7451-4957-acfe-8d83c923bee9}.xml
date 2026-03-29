@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{d216c528-7451-4957-acfe-8d83c923bee9}">
+		<property name="assetPath">
+			<value>Phrases/After killing rabbit 3.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>6.158666666666667</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{cb79bd6d-1720-49ca-9f52-1842a35868bf}</destination>
+		</relationship>
+	</object>
+</objects>
