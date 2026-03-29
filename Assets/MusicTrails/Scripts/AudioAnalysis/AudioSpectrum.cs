@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Scripts.Sound;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
 public class AudioSpectrum : MonoBehaviour
 {
     private AudioSource audioSource;
@@ -46,7 +46,13 @@ public class AudioSpectrum : MonoBehaviour
 
     private void Update()
     {
-        audioSource.GetSpectrumData(samples, 0, FFTWindow.Hanning);
+        // audioSource.GetSpectrumData(samples, 0, FFTWindow.Hanning);
+        if (FmodSpectrumProvider.Instance == null)
+        {
+            print("No Audio Spectrum Provider");
+            return;
+        }
+        samples = FmodSpectrumProvider.Instance.Spectrum;
         UpdateFrequenciesValues();
     }
 

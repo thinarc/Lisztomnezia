@@ -20,7 +20,7 @@ public class BeatSquare : MonoBehaviour
 
     public void OnBeat()
     {
-        image.color = highlightedColor;
+        if (gameObject.activeInHierarchy) image.color = highlightedColor;
     }
 
     private void Update()
