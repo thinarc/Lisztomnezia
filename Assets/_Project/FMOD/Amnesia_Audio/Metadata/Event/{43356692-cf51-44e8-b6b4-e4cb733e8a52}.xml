@@ -8,7 +8,7 @@
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{ad4d64a1-9bff-4ded-b0bd-fd5485257381}</destination>
+			<destination>{bc0f46fa-ffd8-488a-b7da-79a4939d7b9b}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{bd707a45-062c-4063-85c6-c964a80706d1}</destination>
@@ -32,7 +32,7 @@
 			<destination>{070d14cf-97f0-4b92-9396-1e8bd8200acc}</destination>
 		</relationship>
 		<relationship name="banks">
-			<destination>{727df922-a3fe-4655-8c2e-65b70a5b571b}</destination>
+			<destination>{279cc55a-022c-4976-bbe0-523595f4d34d}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixer" id="{bd707a45-062c-4063-85c6-c964a80706d1}">
@@ -89,6 +89,9 @@
 	</object>
 	<object class="MixerBusPanner" id="{d078f999-251b-4048-a747-7f237ac0726b}" />
 	<object class="SingleSound" id="{4dd94666-5824-4d53-9ee9-2cc72086057a}">
+		<property name="isAsync">
+			<value>true</value>
+		</property>
 		<property name="length">
 			<value>130.80000000000001</value>
 		</property>
@@ -100,6 +103,9 @@
 		<property name="name">
 			<value>Main_Menu</value>
 		</property>
+		<relationship name="modulators">
+			<destination>{3a003251-12ad-4ca1-a185-0fce59f3eda8}</destination>
+		</relationship>
 		<relationship name="effectChain">
 			<destination>{67aed31b-2135-4336-a95a-5d2183781413}</destination>
 		</relationship>
@@ -117,6 +123,23 @@
 	</object>
 	<object class="MixerBusPanner" id="{73096087-a4f4-49b9-be3a-94f95f69b863}" />
 	<object class="MixerBusFader" id="{f1bcdb04-a2c3-431b-87a7-372c39dca2c9}" />
+	<object class="ADSRModulator" id="{3a003251-12ad-4ca1-a185-0fce59f3eda8}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>volume</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>0</value>
+		</property>
+		<property name="releaseShape">
+			<value>-0.291795075</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
+	</object>
 	<object class="MixerBusEffectChain" id="{67aed31b-2135-4336-a95a-5d2183781413}">
 		<relationship name="effects">
 			<destination>{3f54fc6e-86db-4f6d-a9cf-68bb3f41f49e}</destination>
