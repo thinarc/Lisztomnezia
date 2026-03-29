@@ -71,20 +71,26 @@ namespace _Project.Scripts.osu_.Hit
             _run = false;
             
             if (!isTailed) return;
-            tail.GetComponent<CanvasGroup>().DOFade(0, tailDuration / 6f).SetEase(Ease.InSine);
-            endTail[0].GetComponent<CanvasGroup>().DOFade(0, tailDuration / 4f).SetEase(Ease.InSine);
+            tail.GetComponent<CanvasGroup>().DOFade(0, tailDuration / 4f).SetEase(Ease.InSine);
+            endTail[0].GetComponent<CanvasGroup>().DOFade(0, tailDuration / 2f).SetEase(Ease.InSine);
         }
 
         public void Click()
         {
             if (!_run) return;
+
+            var meh = false;
             
-            if (pace.localScale.x > 0.95f && pace.localScale.x < durationCheck)
+            if (pace.localScale.x > 0.85f && pace.localScale.x < durationCheck)
             {
                 if (!isTailed)
                 {
                     if (pace.localScale.x < checkOk) passText[0].gameObject.SetActive(true);
-                    else passText[1].gameObject.SetActive(true);
+                    else
+                    {
+                        passText[1].gameObject.SetActive(true);
+                        meh = true;
+                    }
                 }
                 
                 _anim.SetTrigger("click");
@@ -92,15 +98,15 @@ namespace _Project.Scripts.osu_.Hit
                 _paceScaleTween.Kill();
                 if (!isTailed)
                 {
-                    OsuController.Instance.RegenSlider();
+                    OsuController.Instance.RegenSlider(meh);
                     pace.DOScale(pace.localScale.x * 1.02f, 0.4f).SetEase(Ease.InSine);
                 }
-                else Tail(pace.localScale.x);
+                else Tail(pace.localScale.x, meh);
             }
             else Miss();
         }
 
-        public async void Tail(float paceScale)
+        public async void Tail(float paceScale, bool meh)
         {
             _tailed = true;
             transform.DOLocalMove(endTail[0].anchoredPosition + endTail[1].anchoredPosition, tailDuration).SetEase(Ease.OutSine);
@@ -119,7 +125,7 @@ namespace _Project.Scripts.osu_.Hit
             
             _anim.SetTrigger("drop");
             _tailed = false;
-            if (!_miss) OsuController.Instance.RegenSlider();
+            if (!_miss) OsuController.Instance.RegenSlider(meh);
         }
 
         public void SetNumber(int n) => nText.text = n.ToString();
@@ -127,8 +133,8 @@ namespace _Project.Scripts.osu_.Hit
         private void ProcessButton()
         {
             _group.DOFade(1, duration).SetEase(Ease.InOutSine);
-            paceCore.DOFade(1, duration * 2f).SetEase(Ease.InQuad);
-            _paceScaleTween = pace.DOScale(0.95f, duration).SetEase(Ease.InOutQuad).OnComplete(Miss);
+            paceCore.DOFade(1, duration * 1.5f).SetEase(Ease.InQuad);
+            _paceScaleTween = pace.DOScale(0.85f, duration).SetEase(Ease.InQuad).OnComplete(Miss);
             _run = true;
         }
     }

@@ -29,7 +29,7 @@ namespace _Project.Scripts.Sound
             if (!isMoving) _speed = Mathf.MoveTowards(_speed, 0, Time.deltaTime * 4);
             else _speed = Mathf.MoveTowards(_speed, targetWalk + 1, Time.deltaTime * 4);
 
-            if (isMoving)
+            if (isMoving && playerController.canMove)
             {
                 PLAYBACK_STATE state;
                 _footsteps.getPlaybackState(out state);

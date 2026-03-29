@@ -7,6 +7,7 @@ using DG.Tweening;
 using EvolveGames;
 using Sirenix.OdinInspector;
 using SmnStyleHardline.Core;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -59,10 +60,15 @@ namespace _Project.Scripts.osu_
         [Header("User"), SerializeField] private Slider slider;
         [SerializeField] private Slider lenghtSlider;
         [SerializeField] private Slider speedSlider;
+        [SerializeField] private CanvasGroup user;
+
+        [SerializeField, Space(5)] private RectTransform hitsParent;
 
         private float _slider;
         private bool _fill;
         private bool _fillCalled;
+
+        private bool _fail;
 
         private void Start()
         {
@@ -86,37 +92,123 @@ namespace _Project.Scripts.osu_
             
             lenghtSlider.value = 0;
             speedSlider.value = 0.5f;
+            
+            repeatText.gameObject.SetActive(false);
         }
+
+        public TextMeshProUGUI repeatText;
         
         public async void RunGame()
         {
             await StartTransition();
-            _run = true;
             _fill = true;
+            await EndTransition();
+            _run = true;
+
+            while (true)
+            {
+                if (_fail)
+                {
+                    SoundManager.Instance.OsuCase.StopLevel();
+                    await WaitRepeat();
+                    
+                    _hitLimit = 9;
+                    _hitCounts = 0;
+                    
+                    slider.value = _slider;
+                    _fill = false;
+            
+                    lenghtSlider.value = 0;
+                    speedSlider.value = 0.5f;
+
+                    await UniTask.Delay(2000);
+                    
+                    repeatText.gameObject.SetActive(true);
+                    repeatText.transform.DOScale(1.025f, 0).OnComplete(() =>
+                    {
+                        repeatText.transform.DOScale(1f, 1f).SetEase(Ease.OutSine);
+                    });
+                    await repeatText.DOFade(0, 0).AsyncWaitForCompletion();
+                    await repeatText.DOFade(1, 0.4f).SetEase(Ease.OutSine).AsyncWaitForCompletion();
+                    
+                    SetReadSpectrum(false);
+
+                    var power = 0f;
+                    var res = false;
+                    while (true)
+                    {
+                        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Mouse0))
+                        {
+                            power += Time.deltaTime * 0.5f * 0.75f;
+                            res = SoundManager.Instance.OsuCase.CaseChange(Time.deltaTime * 0.5f * 0.75f / 15f);
+                        }
+                        else if (power > 0)
+                        {
+                            power -= Time.deltaTime * 3;
+                            res = SoundManager.Instance.OsuCase.CaseChange(-Time.deltaTime * 3 / 15f);
+                        }
+                        repeatText.transform.localScale = Vector3.one * Mathf.Abs(1f + power * 0.1f);
+                        if (power > 2f)
+                        {
+                            repeatText.transform.DOScale(2f, 1f).SetEase(Ease.OutSine);
+                            await repeatText.DOFade(0, 0.2f).SetEase(Ease.OutSine).AsyncWaitForCompletion();
+                            repeatText.gameObject.SetActive(false);
+                            break;
+                        }
+                        
+                        await UniTask.Yield();
+                    }
+                    
+                    _fill = true;
+
+                    if (res) await UniTask.Delay(1000);
+                    SoundManager.Instance.OsuCase.RepLevel();
+                    await RepeatTransition();
+                    for (var i = 0; i < hitsParent.childCount; i++) Destroy(hitsParent.GetChild(i).gameObject);
+                    SetReadSpectrum(true);
+                    _fail = false;
+                    _slider = 0;
+                    _fillCalled = false;
+                }
+                
+                await UniTask.Yield();
+            }
+        }
+
+        public async void SetReadSpectrum(bool read)
+        {
+            disableBass = !read;
+            disableSnare = !read;
         }
         
         public void OnBass()
         {
+            if (_fail) return;
             if (!_run || disableBass) return;
-            _bassValue = 1f; ;
+            _bassValue = 1f;
         }
 
         public void OnSnare()
         {
+            if (_fail) return;
             if (!_run || disableSnare) return;
             _snareValue = 1f;
         }
 
         [Button] public void KickSlider()
         {
+            if (_fail) return;
             _slider -= 0.2f;
             _slider = Mathf.Clamp(_slider, 0.001f, 1f);
             slider.DOValue(_slider, 0.4f).SetEase(Ease.OutSine);
+            if (_slider <= 0.001f) _fail = true;
         }
         
-        [Button] public void RegenSlider()
+        [Button] public void RegenSlider(bool meh)
         {
-            _slider += 0.05f;
+            if (_fail) return;
+            if (meh) _slider += 0.025f;
+            else _slider += 0.05f;
             _slider = Mathf.Clamp(_slider, 0.001f, 1f);
             slider.DOValue(_slider, 0.4f).SetEase(Ease.OutSine);
         }
@@ -144,7 +236,7 @@ namespace _Project.Scripts.osu_
                 _hitCounts++;
                 
                 var pos = positioner.GetNextPosition(false);
-                var hit = Instantiate(bassPrefabs[0], transform);
+                var hit = Instantiate(bassPrefabs[0], hitsParent);
                 var rect = hit.GetComponent<RectTransform>();
                 rect.anchoredPosition = pos;
                 rect.SetAsFirstSibling();
@@ -165,7 +257,7 @@ namespace _Project.Scripts.osu_
                 var pos = positioner.GetNextPosition(true);
                 var prefabIndex = 0;
                 if (_snareValue > snareTailTreshold) prefabIndex = 1;
-                var hit = Instantiate(snarePrefabs[prefabIndex], transform);
+                var hit = Instantiate(snarePrefabs[prefabIndex], hitsParent);
                 var rect = hit.GetComponent<RectTransform>();
                 rect.anchoredPosition = pos;
                 if (prefabIndex == 1)
@@ -188,6 +280,73 @@ namespace _Project.Scripts.osu_
             _snareUsed = _snareValue > snareTreshold;
             
             _hitDelay -= Time.deltaTime;
+        }
+
+        private async UniTask WaitRepeat()
+        {
+            user.DOFade(0, 0.4f).SetEase(Ease.InOutSine);
+            hitsParent.GetComponent<CanvasGroup>().DOFade(0, 0.4f).SetEase(Ease.InOutSine);
+            
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Confined;
+            cursorTrail.SetActive(false);
+            
+            transition.material.SetFloat("_FadingFade", 0);
+            transition.material.SetFloat("_GaussianBlurFade", 0);
+            
+            SSHStyleManager.API.Outline.SetColorOutlineStrength(0.11f);
+            
+            GetComponent<Image>().material = _oldMat;
+            transition.DOFade(1, 0.4f).SetEase(Ease.InOutSine);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.08f));
+            _canvas.DOFade(0, 0.1f).SetEase(Ease.OutQuad);
+            
+            _ = UniTask.WaitWhile(() =>
+            {
+                var val = Mathf.MoveTowards(transition.material.GetFloat("_GaussianBlurFade"), 1, Time.deltaTime * Random.Range(0.64f, 0.86f) * 1.2f);
+                transition.material.SetFloat("_GaussianBlurFade", val);
+                return !Mathf.Approximately(val, 1);
+            });
+            
+            await UniTask.WaitWhile(() =>
+            {
+                var val = Mathf.MoveTowards(transition.material.GetFloat("_FadingFade"), 1, Time.deltaTime * Random.Range(0.8f, 0.96f) * 1.2f);
+                transition.material.SetFloat("_FadingFade", val);
+                return !Mathf.Approximately(val, 1);
+            });
+        }
+
+        private Material _oldMat;
+        
+        private async UniTask RepeatTransition()
+        {
+            user.DOFade(1, 0.2f).SetEase(Ease.InOutSine);
+            hitsParent.GetComponent<CanvasGroup>().DOFade(1, 0.2f).SetEase(Ease.InOutSine);
+            
+            SoundManager.Instance.OsuCase.RepLevel();
+            
+            SSHStyleManager.API.Outline.SetColorOutlineStrength(3f);
+            
+            GetComponent<Image>().material = transition.material;
+            _canvas.DOFade(1, 0.4f).SetEase(Ease.InOutSine);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.08f));
+            transition.DOFade(0, 0.1f).SetEase(Ease.OutQuad);
+            
+            await UniTask.WaitWhile(() =>
+            {
+                var val = Mathf.MoveTowards(transition.material.GetFloat("_FadingFade"), 0, Time.deltaTime * Random.Range(0.8f, 0.96f) * 2);
+                transition.material.SetFloat("_FadingFade", val);
+                return !Mathf.Approximately(val, 0);
+            });
+            
+            _ = UniTask.WaitWhile(() =>
+            {
+                var val = Mathf.MoveTowards(transition.material.GetFloat("_GaussianBlurFade"), 0, Time.deltaTime * Random.Range(0.64f, 0.86f) * 2);
+                transition.material.SetFloat("_GaussianBlurFade", val);
+                return !Mathf.Approximately(val, 0);
+            });
+            
+            cursorTrail.SetActive(true);
         }
         
         private async UniTask StartTransition()
@@ -213,8 +372,10 @@ namespace _Project.Scripts.osu_
                 transition.material.SetFloat("_FadingFade", val);
                 return !Mathf.Approximately(val, 1);
             });
-            
-            GetComponent<Image>().material = transition.material;
+
+            var image = GetComponent<Image>();
+            _oldMat = image.material;
+            image.material = transition.material;
             _canvas.DOFade(1, 0.4f).SetEase(Ease.InOutSine);
             await UniTask.Delay(TimeSpan.FromSeconds(0.08f));
             transition.DOFade(0, 0.1f).SetEase(Ease.OutQuad);
@@ -223,7 +384,10 @@ namespace _Project.Scripts.osu_
             
             SoundManager.Instance.MusicLoop.SetPauseAmb(true);
             SoundManager.Instance.OsuCase.StartLevel();
-            
+        }
+
+        private async UniTask EndTransition()
+        {
             await UniTask.WaitWhile(() =>
             {
                 var val = Mathf.MoveTowards(transition.material.GetFloat("_FadingFade"), 0, Time.deltaTime * Random.Range(0.8f, 0.96f) * 2);
