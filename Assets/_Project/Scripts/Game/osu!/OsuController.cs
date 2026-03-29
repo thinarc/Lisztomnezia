@@ -1,7 +1,9 @@
 using System;
+using System.Globalization;
 using _Project.Scripts.Managers;
 using _Project.Scripts.osu_.Align;
 using _Project.Scripts.osu_.Hit;
+using _Project.Scripts.Sound;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using EvolveGames;
@@ -59,6 +61,8 @@ namespace _Project.Scripts.osu_
 
         [Header("User"), SerializeField] private Slider slider;
         [SerializeField] private Slider lenghtSlider;
+        [SerializeField] private TextMeshProUGUI lenghtNowText;
+        [SerializeField] private TextMeshProUGUI lenghtMaxText;
         [SerializeField] private Slider speedSlider;
         [SerializeField] private CanvasGroup user;
 
@@ -96,12 +100,16 @@ namespace _Project.Scripts.osu_
             repeatText.gameObject.SetActive(false);
         }
 
+        public TextMeshProUGUI defeatText;
         public TextMeshProUGUI repeatText;
         
         public async void RunGame()
         {
             await StartTransition();
             _fill = true;
+            var desc = SoundManager.Instance.OsuCase.GetDesc()[1];
+            lenghtSlider.maxValue = desc;
+            lenghtMaxText.text = FormatTime((int)desc).ToString(CultureInfo.CurrentCulture);
             await EndTransition();
             _run = true;
 
@@ -120,8 +128,18 @@ namespace _Project.Scripts.osu_
             
                     lenghtSlider.value = 0;
                     speedSlider.value = 0.5f;
+                    
+                    defeatText.gameObject.SetActive(true);
+                    defeatText.transform.DOScale(1f - 0.025f, 0).OnComplete(() =>
+                    {
+                        defeatText.transform.DOScale(1f, 1f).SetEase(Ease.OutSine);
+                    });
+                    await defeatText.DOFade(0, 0).AsyncWaitForCompletion();
+                    defeatText.DOFade(1, 1f).SetEase(Ease.OutSine);
 
                     await UniTask.Delay(2000);
+                    
+                    await defeatText.DOFade(0, 0.4f).SetEase(Ease.OutSine).AsyncWaitForCompletion();
                     
                     repeatText.gameObject.SetActive(true);
                     repeatText.transform.DOScale(1.025f, 0).OnComplete(() =>
@@ -161,7 +179,7 @@ namespace _Project.Scripts.osu_
                     
                     _fill = true;
 
-                    if (res) await UniTask.Delay(1000);
+                    if (res) await UniTask.Delay(500);
                     SoundManager.Instance.OsuCase.RepLevel();
                     await RepeatTransition();
                     for (var i = 0; i < hitsParent.childCount; i++) Destroy(hitsParent.GetChild(i).gameObject);
@@ -213,8 +231,21 @@ namespace _Project.Scripts.osu_
             slider.DOValue(_slider, 0.4f).SetEase(Ease.OutSine);
         }
         
+        string FormatTime(int ms)
+        {
+            int totalSeconds = ms / 1000;
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
+
+            return $"{minutes}:{seconds:00}";
+        }
+        
         private void Update()
         {
+            var desc = SoundManager.Instance.OsuCase.GetDesc();
+            lenghtSlider.value = desc[0];
+            lenghtNowText.text = FormatTime((int)desc[0]).ToString(CultureInfo.CurrentCulture);
+            
             if (_fill)
             {
                 if (!_fillCalled)

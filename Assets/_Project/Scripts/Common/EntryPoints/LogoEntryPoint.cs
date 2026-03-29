@@ -1,6 +1,7 @@
 using _Project.Scripts.HUD;
 using _Project.Scripts.Managers;
 using Cysharp.Threading.Tasks;
+using SmnStyleHardline.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,7 +17,8 @@ namespace _Project.Scripts.Common.EntryPoints
             await startOptions.CheckOptions();
             
             await UniTask.WaitUntil(() => Input.GetKey(KeyCode.Space));
-            SceneManager.LoadScene(2);
+            SSHStyleManager.API.Outline.SetColorOutlineStrength(0.11f);
+            // SceneManager.LoadScene(2);
         }
     }
 }

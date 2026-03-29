@@ -17,6 +17,17 @@ namespace _Project.Scripts.Sound
             _case.setParameterByName("QTE_Star", 1f);
         }
 
+        public float[] GetDesc()
+        {
+            _case.getTimelinePosition(out var pos);
+            _case.getDescription(out var desc);
+            desc.getLength(out var length);
+
+            var normalized = (float)pos / length;
+            
+            return new [] { pos, length, normalized };
+        }
+
         public void RepLevel()
         {
             _case.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
