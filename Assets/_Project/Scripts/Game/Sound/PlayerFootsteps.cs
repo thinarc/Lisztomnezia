@@ -10,6 +10,7 @@ namespace _Project.Scripts.Sound
         [SerializeField] private PlayerController playerController;
         
         private EventInstance _footsteps;
+        private float _speed;
 
         void Start()
         {
@@ -21,9 +22,14 @@ namespace _Project.Scripts.Sound
 
         private void Update()
         {
+            var targetWalk = playerController.Velocity / playerController.MaxSpeed;
+            if (playerController.IsRunning) targetWalk += 1;
+            
             bool isMoving = playerController.Velocity > 0.01f;
+            if (!isMoving) _speed = Mathf.MoveTowards(_speed, 0, Time.deltaTime * 4);
+            else _speed = Mathf.MoveTowards(_speed, targetWalk + 1, Time.deltaTime * 4);
 
-            if (isMoving)
+            if (isMoving && playerController.canMove)
             {
                 PLAYBACK_STATE state;
                 _footsteps.getPlaybackState(out state);
@@ -39,6 +45,8 @@ namespace _Project.Scripts.Sound
             {
                 _footsteps.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             }
+            
+            _footsteps.setParameterByName("Speed", _speed);
         }
     }
 }

@@ -310,8 +310,11 @@ public class SphereController : MonoBehaviour
         scale *= 1.12f;
         scaleText *= 1.12f;
         transform.DOScale(scale, 0.4f).SetEase(Ease.OutExpo);
-        GetComponentInChildren<TextMeshPro>().transform.DOScale(scaleText, 0.4f).SetEase(Ease.OutExpo);
+        ppp[0].transform.DOScale(scaleText, 0.4f).SetEase(Ease.OutExpo);
+        ppp[1].transform.DOScale(scaleText, 0.4f).SetEase(Ease.OutExpo);
     }
+
+    public TextMeshPro[] ppp;
     
     private void OnTriggerExit(Collider other)
     {
@@ -340,7 +343,8 @@ public class SphereController : MonoBehaviour
         scale /= 1.1f;
         scaleText /= 1.12f;
         transform.DOScale(scale, 0.6f).SetEase(Ease.InExpo);
-        GetComponentInChildren<TextMeshPro>().transform.DOScale(Vector2.zero, 0.4f).SetEase(Ease.InExpo);
+        ppp[0].transform.DOScale(Vector2.zero, 0.4f).SetEase(Ease.InExpo);
+        ppp[1].transform.DOScale(Vector2.zero, 0.4f).SetEase(Ease.InExpo);
     }
 
     private Vector3 scale;

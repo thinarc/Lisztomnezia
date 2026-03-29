@@ -537,7 +537,7 @@ Material:
     - _GlitchNoiseSpeed: {r: 0, g: 1, b: 0, a: 0}
     - _HalftonePosition: {r: 0, g: 0, b: 0, a: 0}
     - _HologramTint: {r: 0.3137255, g: 1.662745, b: 2.996078, a: 1}
-    - _InkSpreadColor: {r: 0.5457247, g: 0.31398875, b: 0.26635566, a: 1}
+    - _InkSpreadColor: {r: 0.038204376, g: 0.05951124, b: 0.09758736, a: 1}
     - _InkSpreadNoiseScale: {r: 0.4, g: 0.4, b: 0, a: 0}
     - _InkSpreadPosition: {r: 0.5, g: -1, b: 0, a: 0}
     - _InnerOutlineColor: {r: 11.98431, g: 1.254902, b: 1.254902, a: 1}
@@ -558,10 +558,10 @@ Material:
     - _OuterOutlineNoiseSpeed: {r: 0, g: 0.1, b: 0, a: 0}
     - _OuterOutlineTextureSpeed: {r: 0.5, g: 0, b: 0, a: 0}
     - _PingPongGlowFrom: {r: 0.730461, g: 0.5394797, b: 0.57758063, a: 1}
-    - _PingPongGlowTo: {r: 0.45078585, g: 0.25015837, b: 0.17788847, a: 1}
+    - _PingPongGlowTo: {r: 0.23839766, g: 0.19806935, b: 0.1811643, a: 1}
     - _PixelOutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _PixelOutlineTextureSpeed: {r: 0.5, g: 0, b: 0, a: 0}
-    - _PoisonColor: {r: 0.72305536, g: 0.5840786, b: 0.42326775, a: 1}
+    - _PoisonColor: {r: 0.47843137, g: 0.41568628, b: 0.34509805, a: 1}
     - _PoisonNoiseScale: {r: 0.13, g: 0.21, b: 0, a: 0}
     - _PoisonNoiseSpeed: {r: 0, g: -0.2, b: 0, a: 0}
     - _RainbowCenter: {r: 0, g: 0, b: 0, a: 0}

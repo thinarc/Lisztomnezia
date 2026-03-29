@@ -7,6 +7,7 @@ namespace _Project.Scripts.Managers
     {
         public static SoundManager Instance { get; private set; }
         public MusicLoop MusicLoop { get; private set; }
+        public OsuCase OsuCase { get; private set; }
         
         private float _bgVolume;
 
@@ -32,7 +33,7 @@ namespace _Project.Scripts.Managers
             }
         }
 
-        public void Start()
+        private void Start()
         {
             Instance = this;
             
@@ -41,6 +42,9 @@ namespace _Project.Scripts.Managers
 
             MusicLoop = new MusicLoop();
             MusicLoop.Initialize();
+            
+            OsuCase = new OsuCase();
+            OsuCase.Initialize();
         }
     }
 }

@@ -1,32 +1,32 @@
 using FMOD.Studio;
 using FMODUnity;
-using UnityEngine;
 
 namespace _Project.Scripts.Sound
 {
     public class MusicLoop
     {
-        private EventInstance _background;
-        private EventInstance _additional3d;
+        private EventInstance _amb;
         
         public void Initialize()
         {
-            _background = RuntimeManager.CreateInstance("event:/Music/EV_Amb");
-            _background.start();
-            // _background.setPaused(true);
+            _amb = RuntimeManager.CreateInstance("event:/Music/Amb+Noise");
+            _amb.start();
+            _amb.setParameterByName("Amb_Int", 2);
         }
 
-        public void CallAdditional3d(GameObject go)
+        public void SetPauseAmb(bool pause)
         {
-            _additional3d = RuntimeManager.CreateInstance("event:/Music/Noise");
-            _additional3d.set3DAttributes(go.To3DAttributes());
-            _additional3d.start();
-            // _additional3d.setPaused(true);
+            _amb.setPaused(pause);
         }
 
-        public void KillAdditional3d(GameObject go)
+        public void CallNoise()
         {
-            _additional3d.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            _amb.setParameterByName("Amb_Int", 0);
+        }
+
+        public void KillNoise()
+        {
+            _amb.setParameterByName("Amb_Int", 2);
         }
     }
 }

@@ -1,4 +1,5 @@
 using _Code.Scripts.VFX;
+using _Project.Scripts.Managers;
 using _Project.Scripts.osu_;
 using _Project.Scripts.Sense;
 using DG.Tweening;
@@ -19,6 +20,7 @@ namespace _Project.Scripts.Rabbit
             _sprite = GetComponentInChildren<SpriteRenderer>();
 
             _sprite.DOFade(0, 0);
+            OsuController.Instance.RunGame();
         }
 
         private void ShowView(PlayerController player)
@@ -35,6 +37,7 @@ namespace _Project.Scripts.Rabbit
         private void HideView(PlayerController player)
         {
             player.canMove = true;
+            SoundManager.Instance.MusicLoop.KillNoise();
             ParticleSystem_FogAvoidPlayer.Instances.ForEach(p => p.ReturnView());
         }
         

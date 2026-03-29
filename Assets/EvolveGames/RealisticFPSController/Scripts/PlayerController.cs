@@ -6,6 +6,8 @@ namespace EvolveGames
     public class PlayerController : MonoBehaviour
     {
         public float Velocity => characterController.velocity.magnitude;
+        public float MaxSpeed => isRunning ? RuningSpeed : walkingSpeed;
+        public bool IsRunning => isRunning;
         public bool targetView;
         
         [Header("PlayerController")]
