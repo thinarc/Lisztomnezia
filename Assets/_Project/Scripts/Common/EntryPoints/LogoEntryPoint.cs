@@ -22,17 +22,17 @@ namespace _Project.Scripts.Common.EntryPoints
             
             xClick.DOFade(0, 0f).OnComplete(() => xClick.DOFade(1, 1f).SetEase(Ease.OutExpo));
             
-            xClick.text = "(3x)";
-            await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0));
-            xClick.text = "(3x)";
-            await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0));
-            xClick.text = "(2x)";
-            await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0));
-            xClick.text = "(1x)";
-            await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0));
-            xClick.text = "(0x)";
-            SSHStyleManager.API.Outline.SetColorOutlineStrength(0.11f);
+            // xClick.text = "(3x)";
+            // await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0));
+            // xClick.text = "(3x)";
+            // await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0));
+            // xClick.text = "(2x)";
+            // await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0));
+            // xClick.text = "(1x)";
+            // await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0));
+            // xClick.text = "(0x)";
             
+            SSHStyleManager.API.Outline.SetColorOutlineStrength(0.11f);
             SceneManager.LoadScene(2);
         }
     }

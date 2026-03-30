@@ -440,7 +440,6 @@ namespace _Project.Scripts.osu_
         {
             transition.material.SetFloat("_FadingFade", 1);
             transition.material.SetFloat("_GaussianBlurFade", 1);
-            SSHStyleManager.API.Outline.SetColorOutlineStrength(0.11f);
         }
     }
 }
