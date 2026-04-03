@@ -16,11 +16,15 @@ namespace _Project.Scripts.Common.EntryPoints
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Confined;
-            SSHStyleManager.API.Outline.SetColorOutlineStrength(3f);
             
             Instance = this;
             DontDestroyOnLoad(this);
+            
+            SSHStyleManager.API.Outline.SetColorOutlineStrength(3f);
             SceneManager.LoadScene(1);
+            
+            // SSHStyleManager.API.Outline.SetColorOutlineStrength(0.11f);
+            // SceneManager.LoadScene(2);
         }
 
         public TextMeshProUGUI escText;

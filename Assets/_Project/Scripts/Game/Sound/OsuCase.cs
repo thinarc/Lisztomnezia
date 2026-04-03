@@ -8,13 +8,27 @@ namespace _Project.Scripts.Sound
     public class OsuCase
     {
         private EventInstance _case;
+        private string level = "event:/QTE Sound/Loosing Myself";
 
         public void Initialize() { }
-        public void StartLevel()
+        public void StartLevel(int lvl)
         {
-            _case = RuntimeManager.CreateInstance("event:/QTE Sound/QTE");
+            level = lvl switch
+            {
+                1 => "event:/QTE Sound/Loosing Myself",
+                2 => "event:/QTE Sound/Foggy mind",
+                3 => "event:/QTE Sound/The Last Efforts",
+                _ => level
+            };
+
+            _case = RuntimeManager.CreateInstance(level);
             _case.start();
             _case.setParameterByName("QTE_Star", 1f);
+        }
+
+        public void PassLevel()
+        {
+            _case.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
 
         public float[] GetDesc()
@@ -31,7 +45,7 @@ namespace _Project.Scripts.Sound
         public void RepLevel()
         {
             _case.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            _case = RuntimeManager.CreateInstance("event:/QTE Sound/QTE");
+            _case = RuntimeManager.CreateInstance(level);
             _case.start();
             _case.setParameterByName("QTE_Star", 1f);
         }

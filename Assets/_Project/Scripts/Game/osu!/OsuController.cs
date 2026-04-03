@@ -73,6 +73,7 @@ namespace _Project.Scripts.osu_
         private bool _fillCalled;
 
         private bool _fail;
+        private bool _pass;
 
         private void Start()
         {
@@ -102,14 +103,25 @@ namespace _Project.Scripts.osu_
 
         public TextMeshProUGUI defeatText;
         public TextMeshProUGUI repeatText;
+
+        public Image lvlImage;
+        public Sprite[] lvlSprites;
         
-        public async void RunGame()
+        public async UniTask RunGame(int level)
         {
+            lvlImage.sprite = lvlSprites[level - 1];
+            
             await StartTransition();
             _fill = true;
+            
+            SoundManager.Instance.MusicLoop.SetPauseAmb(true);
+            SoundManager.Instance.OsuCase.StartLevel(level);
+            
             var desc = SoundManager.Instance.OsuCase.GetDesc()[1];
             lenghtSlider.maxValue = desc;
             lenghtMaxText.text = FormatTime((int)desc).ToString(CultureInfo.CurrentCulture);
+            lenghtSlider.value = 0;
+            
             await EndTransition();
             _run = true;
 
@@ -189,6 +201,87 @@ namespace _Project.Scripts.osu_
                     _fillCalled = false;
                 }
                 
+                else if (_pass && _run)
+                {
+                    _run = false;
+                    _pass = false;
+
+                    SoundManager.Instance.OsuCase.PassLevel();
+                    await WaitRepeat();
+                    
+                    _hitLimit = 9;
+                    _hitCounts = 0;
+                    
+                    slider.value = _slider;
+                    _fill = false;
+            
+                    lenghtSlider.value = 0;
+                    speedSlider.value = 0.5f;
+                    
+                    // defeatText.gameObject.SetActive(true);
+                    // defeatText.transform.DOScale(1f - 0.025f, 0).OnComplete(() =>
+                    // {
+                    //     defeatText.transform.DOScale(1f, 1f).SetEase(Ease.OutSine);
+                    // });
+                    // await defeatText.DOFade(0, 0).AsyncWaitForCompletion();
+                    // defeatText.DOFade(1, 1f).SetEase(Ease.OutSine);
+                    //
+                    // await UniTask.Delay(2000);
+                    //
+                    // await defeatText.DOFade(0, 0.4f).SetEase(Ease.OutSine).AsyncWaitForCompletion();
+                    
+                    // repeatText.gameObject.SetActive(true);
+                    // repeatText.transform.DOScale(1.025f, 0).OnComplete(() =>
+                    // {
+                    //     repeatText.transform.DOScale(1f, 1f).SetEase(Ease.OutSine);
+                    // });
+                    // await repeatText.DOFade(0, 0).AsyncWaitForCompletion();
+                    // await repeatText.DOFade(1, 0.4f).SetEase(Ease.OutSine).AsyncWaitForCompletion();
+                    
+                    SetReadSpectrum(false);
+
+                    // var power = 0f;
+                    // var res = false;
+                    // while (true)
+                    // {
+                    //     if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Mouse0))
+                    //     {
+                    //         power += Time.deltaTime * 0.5f * 0.75f;
+                    //         res = SoundManager.Instance.OsuCase.CaseChange(Time.deltaTime * 0.5f * 0.75f / 15f);
+                    //     }
+                    //     else if (power > 0)
+                    //     {
+                    //         power -= Time.deltaTime * 3;
+                    //         res = SoundManager.Instance.OsuCase.CaseChange(-Time.deltaTime * 3 / 15f);
+                    //     }
+                    //     repeatText.transform.localScale = Vector3.one * Mathf.Abs(1f + power * 0.1f);
+                    //     if (power > 2f)
+                    //     {
+                    //         repeatText.transform.DOScale(2f, 1f).SetEase(Ease.OutSine);
+                    //         await repeatText.DOFade(0, 0.2f).SetEase(Ease.OutSine).AsyncWaitForCompletion();
+                    //         repeatText.gameObject.SetActive(false);
+                    //         break;
+                    //     }
+                    //     
+                    //     await UniTask.Yield();
+                    // }
+                    
+                    // _fill = true;
+
+                    // if (res) await UniTask.Delay(500);
+                    // SoundManager.Instance.OsuCase.RepLevel();
+                    await ExitTransition();
+                    for (var i = 0; i < hitsParent.childCount; i++) Destroy(hitsParent.GetChild(i).gameObject);
+                    SetReadSpectrum(true);
+                    _fail = false;
+                    _slider = 0;
+                    _fillCalled = false;
+                    
+                    player.enabled = true;
+                    
+                    break;
+                }
+                
                 await UniTask.Yield();
             }
         }
@@ -245,6 +338,8 @@ namespace _Project.Scripts.osu_
             var desc = SoundManager.Instance.OsuCase.GetDesc();
             lenghtSlider.value = desc[0];
             lenghtNowText.text = FormatTime((int)desc[0]).ToString(CultureInfo.CurrentCulture);
+
+            if (lenghtSlider.value / lenghtSlider.maxValue >= 1f && _run) _pass = true;
             
             if (_fill)
             {
@@ -380,8 +475,44 @@ namespace _Project.Scripts.osu_
             cursorTrail.SetActive(true);
         }
         
+        private async UniTask ExitTransition()
+        {
+            // user.DOFade(1, 0.2f).SetEase(Ease.InOutSine);
+            // hitsParent.GetComponent<CanvasGroup>().DOFade(1, 0.2f).SetEase(Ease.InOutSine);
+            
+            // SoundManager.Instance.OsuCase.RepLevel();
+            
+            // SSHStyleManager.API.Outline.SetColorOutlineStrength(3f);
+            
+            GetComponent<Image>().material = transition.material;
+            transition.DOFade(1, 0.4f).SetEase(Ease.InOutSine);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.08f));
+            _canvas.DOFade(0, 0.1f).SetEase(Ease.OutQuad);
+            
+            await UniTask.WaitWhile(() =>
+            {
+                var val = Mathf.MoveTowards(transition.material.GetFloat("_FadingFade"), 0, Time.deltaTime * Random.Range(0.8f, 0.96f) * 2);
+                transition.material.SetFloat("_FadingFade", val);
+                return !Mathf.Approximately(val, 0);
+            });
+            
+            _ = UniTask.WaitWhile(() =>
+            {
+                var val = Mathf.MoveTowards(transition.material.GetFloat("_GaussianBlurFade"), 0, Time.deltaTime * Random.Range(0.64f, 0.86f) * 2);
+                transition.material.SetFloat("_GaussianBlurFade", val);
+                return !Mathf.Approximately(val, 0);
+            });
+            
+            cursorTrail.SetActive(false);
+            
+            transition.DOFade(0, 0.1f).SetEase(Ease.OutQuad);
+        }
+        
         private async UniTask StartTransition()
         {
+            user.DOFade(1, 0.2f).SetEase(Ease.InOutSine);
+            hitsParent.GetComponent<CanvasGroup>().DOFade(1, 0.2f).SetEase(Ease.InOutSine);
+            
             player.enabled = false;
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Confined;
@@ -412,9 +543,7 @@ namespace _Project.Scripts.osu_
             transition.DOFade(0, 0.1f).SetEase(Ease.OutQuad);
             
             SSHStyleManager.API.Outline.SetColorOutlineStrength(3f);
-            
-            SoundManager.Instance.MusicLoop.SetPauseAmb(true);
-            SoundManager.Instance.OsuCase.StartLevel();
+            cursorTrail.SetActive(true);
         }
 
         private async UniTask EndTransition()

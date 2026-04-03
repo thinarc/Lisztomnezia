@@ -14,36 +14,42 @@ namespace _Project.Scripts.Rabbit
         [SerializeField] private float rewardValue = 0.3f;
 
         private SpriteRenderer _sprite;
+        private PlayerController _player;
+
+        public int lvl = 1;
 
         private void Start()
         {
             _sprite = GetComponentInChildren<SpriteRenderer>();
 
             _sprite.DOFade(0, 0);
-            OsuController.Instance.RunGame();
+            // OsuController.Instance.RunGame(1);
         }
 
-        private void ShowView(PlayerController player)
+        private async void ShowView()
         {
-            player.canMove = false;
+            _player.canMove = false;
             ParticleSystem_FogAvoidPlayer.Instances.ForEach(p => p.NewView(transform));
             
-            _sprite.DOFade(1, 0.4f).SetEase(Ease.OutQuad);
-            player.targetView = true;
+            await _sprite.DOFade(1, 0.4f).SetEase(Ease.OutQuad).AsyncWaitForCompletion();
+            _player.targetView = true;
             
-            OsuController.Instance.RunGame();
+            await OsuController.Instance.RunGame(lvl);
+            HideView();
         }
 
-        private void HideView(PlayerController player)
+        private async void HideView()
         {
-            player.canMove = true;
+            _player.canMove = true;
             SoundManager.Instance.MusicLoop.KillNoise();
             ParticleSystem_FogAvoidPlayer.Instances.ForEach(p => p.ReturnView());
+            await _sprite.DOFade(0, 0.2f).SetEase(Ease.OutQuad).AsyncWaitForCompletion();
         }
         
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player")) ShowView(other.GetComponent<PlayerController>());
+            _player = other.GetComponent<PlayerController>();
+            if (other.CompareTag("Player")) ShowView();
         }
     }
 }
