@@ -8,6 +8,7 @@ namespace _Project.Scripts.Managers
         public static SoundManager Instance { get; private set; }
         public MusicLoop MusicLoop { get; private set; }
         public OsuCase OsuCase { get; private set; }
+        public OsuHandleCase OsuHandleCase { get; private set; }
         
         private float _bgVolume;
 
@@ -45,6 +46,8 @@ namespace _Project.Scripts.Managers
             
             OsuCase = new OsuCase();
             OsuCase.Initialize();
+            
+            OsuHandleCase = new OsuHandleCase();
         }
     }
 }

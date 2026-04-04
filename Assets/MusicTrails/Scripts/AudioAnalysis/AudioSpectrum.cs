@@ -23,11 +23,11 @@ public class AudioSpectrum : MonoBehaviour
     private float songAverageSum;
     private int updateCount = 0;
 
-    private void Awake()
-    {
-        audioSource = GetComponent<AudioSource>();
-        SAMPLE_RATE = AudioSettings.outputSampleRate / 2;
-    }
+    // private void Awake()
+    // {
+    //     audioSource = GetComponent<AudioSource>();
+    //     SAMPLE_RATE = AudioSettings.outputSampleRate / 2;
+    // }
 
     private void Start()
     {
@@ -69,7 +69,11 @@ public class AudioSpectrum : MonoBehaviour
         // Frequencies Sum
         for (int i = 0; i < GameManager.NUM_SAMPLES; i++)
         {
-            frequenciesSum += samples[i] * gameManager.ValuesMultiplier; 
+            try
+            {
+                frequenciesSum += samples[i] * gameManager.ValuesMultiplier; 
+            }
+            catch { }
         }
 
         songAverageSum += GetAverage();
@@ -104,8 +108,15 @@ public class AudioSpectrum : MonoBehaviour
 
     public int GetSampleIndex(float frequency)
     {
-        float HzPerSample = SAMPLE_RATE / samples.Length;
-        return Mathf.Max(0, (int)(frequency / HzPerSample) - 1);
+        try
+        {
+            float HzPerSample = SAMPLE_RATE / samples.Length;
+            return Mathf.Max(0, (int)(frequency / HzPerSample) - 1);
+        }
+        catch
+        {
+            return -1;
+        }
     }
 
     public float GetFrequencyBandValue(FrequencyBandName frequencyBand)

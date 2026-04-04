@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.Managers;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
@@ -46,6 +47,8 @@ namespace _Project.Scripts.osu_.Hit
 
         private bool _run;
         private bool _miss;
+
+        public bool isSoft;
         
         private void OnEnable()
         {
@@ -62,6 +65,7 @@ namespace _Project.Scripts.osu_.Hit
         {
             _miss = true;
             OsuController.Instance.KickSlider();
+            SoundManager.Instance.OsuHandleCase.SFail();
             
             _anim.SetTrigger("miss");
             paceAnim.SetTrigger("miss");
@@ -100,8 +104,14 @@ namespace _Project.Scripts.osu_.Hit
                 {
                     OsuController.Instance.RegenSlider(meh);
                     pace.DOScale(pace.localScale.x * 1.02f, 0.4f).SetEase(Ease.InSine);
+                    if (!isSoft) SoundManager.Instance.OsuHandleCase.SHit();
+                    else SoundManager.Instance.OsuHandleCase.SSoftHit();
                 }
-                else Tail(pace.localScale.x, meh);
+                else
+                {
+                    Tail(pace.localScale.x, meh);
+                    SoundManager.Instance.OsuHandleCase.SSlide();
+                }
             }
             else Miss();
         }
@@ -125,7 +135,11 @@ namespace _Project.Scripts.osu_.Hit
             
             _anim.SetTrigger("drop");
             _tailed = false;
-            if (!_miss) OsuController.Instance.RegenSlider(meh);
+            if (!_miss)
+            {
+                OsuController.Instance.RegenSlider(meh);
+                SoundManager.Instance.OsuHandleCase.SSoftHit();
+            }
         }
 
         public void SetNumber(int n) => nText.text = n.ToString();

@@ -20,11 +20,11 @@ namespace _Project.Scripts.Common.EntryPoints
             Instance = this;
             DontDestroyOnLoad(this);
             
-            SSHStyleManager.API.Outline.SetColorOutlineStrength(3f);
-            SceneManager.LoadScene(1);
+            // SSHStyleManager.API.Outline.SetColorOutlineStrength(3f);
+            // SceneManager.LoadScene(1);
             
-            // SSHStyleManager.API.Outline.SetColorOutlineStrength(0.11f);
-            // SceneManager.LoadScene(2);
+            SSHStyleManager.API.Outline.SetColorOutlineStrength(0.11f);
+            SceneManager.LoadScene(2);
         }
 
         public TextMeshProUGUI escText;

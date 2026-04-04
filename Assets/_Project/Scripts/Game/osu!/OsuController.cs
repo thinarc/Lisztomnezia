@@ -109,8 +109,22 @@ namespace _Project.Scripts.osu_
         
         public async UniTask RunGame(int level)
         {
-            lvlImage.sprite = lvlSprites[level - 1];
+            if (level == 2)
+            {
+                disableBass = true;
+                disableSnare = false;
+                hitDelay /= 2f;
+            }
+            else if (level == 3)
+            {
+                disableBass = false;
+                disableSnare = false;
+                hitDelay *= 2f;
+            }
             
+            lvlImage.sprite = lvlSprites[level - 1];
+
+            SoundManager.Instance.OsuHandleCase.SStartOsu().Forget();
             await StartTransition();
             _fill = true;
             
@@ -286,23 +300,24 @@ namespace _Project.Scripts.osu_
             }
         }
 
+        private bool _read;
+
         public async void SetReadSpectrum(bool read)
         {
-            disableBass = !read;
-            disableSnare = !read;
+            _read = read;
         }
         
         public void OnBass()
         {
             if (_fail) return;
-            if (!_run || disableBass) return;
+            if (!_run || disableBass && _read) return;
             _bassValue = 1f;
         }
 
         public void OnSnare()
         {
             if (_fail) return;
-            if (!_run || disableSnare) return;
+            if (!_run || disableSnare && _read) return;
             _snareValue = 1f;
         }
 
@@ -505,7 +520,9 @@ namespace _Project.Scripts.osu_
             
             cursorTrail.SetActive(false);
             
-            transition.DOFade(0, 0.1f).SetEase(Ease.OutQuad);
+            await transition.DOFade(0, 0.1f).SetEase(Ease.OutQuad).AsyncWaitForCompletion();
+            var image = GetComponent<Image>();
+            image.material = _oldMat;
         }
         
         private async UniTask StartTransition()
@@ -523,14 +540,14 @@ namespace _Project.Scripts.osu_
             
             _ = UniTask.WaitWhile(() =>
             {
-                var val = Mathf.MoveTowards(transition.material.GetFloat("_GaussianBlurFade"), 1, Time.deltaTime * Random.Range(0.64f, 0.86f) * 1.2f);
+                var val = Mathf.MoveTowards(transition.material.GetFloat("_GaussianBlurFade"), 1, Time.deltaTime * Random.Range(0.64f, 0.86f));
                 transition.material.SetFloat("_GaussianBlurFade", val);
                 return !Mathf.Approximately(val, 1);
             });
             
             await UniTask.WaitWhile(() =>
             {
-                var val = Mathf.MoveTowards(transition.material.GetFloat("_FadingFade"), 1, Time.deltaTime * Random.Range(0.8f, 0.96f) * 1.2f);
+                var val = Mathf.MoveTowards(transition.material.GetFloat("_FadingFade"), 1, Time.deltaTime * Random.Range(0.8f, 0.96f));
                 transition.material.SetFloat("_FadingFade", val);
                 return !Mathf.Approximately(val, 1);
             });

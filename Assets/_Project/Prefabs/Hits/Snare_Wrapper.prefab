@@ -1076,6 +1076,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  isSoft: 1
 --- !u!225 &1591458098903701974
 CanvasGroup:
   m_ObjectHideFlags: 0
