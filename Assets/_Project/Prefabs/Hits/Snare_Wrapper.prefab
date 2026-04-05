@@ -1055,8 +1055,8 @@ MonoBehaviour:
   - {fileID: 605768751360756086}
   - {fileID: 1243369680121473406}
   duration: 0.8
-  durationCheck: 1.62
-  checkOk: 1.47
+  durationCheck: 1.65
+  checkOk: 1.5
   isTailed: 0
   tailDuration: 0
   endTail: []

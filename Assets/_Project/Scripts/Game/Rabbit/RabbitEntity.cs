@@ -1,4 +1,5 @@
 using _Code.Scripts.VFX;
+using _Project.Scripts.Diary;
 using _Project.Scripts.Managers;
 using _Project.Scripts.osu_;
 using _Project.Scripts.Sense;
@@ -34,8 +35,10 @@ namespace _Project.Scripts.Rabbit
             await _sprite.DOFade(1, 0.4f).SetEase(Ease.OutQuad).AsyncWaitForCompletion();
             _player.targetView = true;
             
-            await OsuController.Instance.RunGame(lvl);
-            HideView();
+            DiaryController.Instance.EnterDiary();
+            
+            // await OsuController.Instance.RunGame(lvl);
+            // HideView();
         }
 
         private async void HideView()
@@ -44,6 +47,7 @@ namespace _Project.Scripts.Rabbit
             SoundManager.Instance.MusicLoop.KillNoise();
             ParticleSystem_FogAvoidPlayer.Instances.ForEach(p => p.ReturnView());
             await _sprite.DOFade(0, 0.2f).SetEase(Ease.OutQuad).AsyncWaitForCompletion();
+            _player.targetView = false;
         }
         
         private void OnTriggerEnter(Collider other)

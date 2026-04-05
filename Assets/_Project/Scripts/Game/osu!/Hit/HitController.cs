@@ -148,7 +148,7 @@ namespace _Project.Scripts.osu_.Hit
         {
             _group.DOFade(1, duration).SetEase(Ease.InOutSine);
             paceCore.DOFade(1, duration * 1.5f).SetEase(Ease.InQuad);
-            _paceScaleTween = pace.DOScale(0.85f, duration).SetEase(Ease.InQuad).OnComplete(Miss);
+            _paceScaleTween = pace.DOScale(0.85f, duration).SetEase(Ease.Linear).OnComplete(Miss);
             _run = true;
         }
     }
