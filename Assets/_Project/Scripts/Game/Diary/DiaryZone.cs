@@ -8,5 +8,10 @@ namespace _Project.Scripts.Diary
         {
             if (other.CompareTag("Diary")) DiaryController.Instance.FillDraw();
         }
+        
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Diary")) DiaryController.Instance.DropDraw();
+        }
     }
 }
