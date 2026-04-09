@@ -33882,6 +33882,7 @@ MonoBehaviour:
   - {fileID: 236354847}
   - {fileID: 731782436}
   - {fileID: 706303484}
+  - {fileID: 1061974392}
   drawSpeedMulti: 1
   trailOffset: {x: -0.25, y: 0, z: 0}
 --- !u!1 &1148571844

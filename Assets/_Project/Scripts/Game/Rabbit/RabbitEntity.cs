@@ -35,10 +35,9 @@ namespace _Project.Scripts.Rabbit
             await _sprite.DOFade(1, 0.4f).SetEase(Ease.OutQuad).AsyncWaitForCompletion();
             _player.targetView = true;
             
-            DiaryController.Instance.EnterDiary();
-            
             // await OsuController.Instance.RunGame(lvl);
-            // HideView();
+            await DiaryController.Instance.EnterDiary();
+            HideView();
         }
 
         private async void HideView()

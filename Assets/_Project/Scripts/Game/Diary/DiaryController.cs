@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -37,7 +38,7 @@ namespace _Project.Scripts.Diary
             _startCursorSpeed = cursorSpeed;
         }
 
-        public void FillDraw()
+        public async void FillDraw()
         {
             var fire = Input.GetKey(KeyCode.Mouse0);
             _anim.SetBool("Draw", fire);
@@ -51,7 +52,20 @@ namespace _Project.Scripts.Diary
             if (drawSpeedMulti >= 20f && !_completed)
             {
                 _completed = true;
-                _anim.SetTrigger("Exit");
+                _anim.SetTrigger("Rip");
+
+                var b = 0;
+                while (true)
+                {
+                    if (b > 5) break;
+                    b++;
+                    
+                    foreach (var dot in drawDots)
+                    {
+                        dot.time /= Random.Range(1.2f, 2f);
+                        await UniTask.DelayFrame(10);
+                    }
+                }
             }
         }
 
@@ -159,10 +173,14 @@ namespace _Project.Scripts.Diary
             }
         }
 
-        public void EnterDiary()
+        public async UniTask EnterDiary()
         {
             _anim.SetTrigger("Enter");
             _isOpen = true;
+            
+            await UniTask.WaitUntil(() => _completed);
+            _anim.SetTrigger("Exit");
+            _completed = false;
         }
     }
 }
