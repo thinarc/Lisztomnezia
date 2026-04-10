@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{dabbfccb-fbd4-407d-be49-84e27f0c65e8}">
 		<property name="assetPath">
-			<value>RawMeat/RawMeat.wav</value>
+			<value>Player/Action/RawMeat/RawMeat.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>

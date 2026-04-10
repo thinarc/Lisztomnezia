@@ -5,7 +5,7 @@
 			<value>Purple Light 2</value>
 		</property>
 		<property name="name">
-			<value>Action</value>
+			<value>OSU Action</value>
 		</property>
 		<relationship name="folder">
 			<destination>{93e0eaed-a5ad-4c3f-9c76-8bf434d65c1c}</destination>

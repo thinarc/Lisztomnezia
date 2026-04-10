@@ -5,7 +5,7 @@
 			<value>After Osu 2</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{c8345e42-3011-44f5-9adb-0a16b6e6c848}</destination>
@@ -122,6 +122,7 @@
 	<object class="MixerBusEffectChain" id="{cd766867-346e-433a-b82f-acb4fddfffb2}">
 		<relationship name="effects">
 			<destination>{5692ddb6-3cf3-4735-9058-0e211047a4e0}</destination>
+			<destination>{cab82a5b-3b67-45a5-9ad6-5174c66d337f}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{427ddeef-d201-4afe-959a-c87848fddcb3}" />
@@ -161,6 +162,14 @@
 	</object>
 	<object class="MixerBusPanner" id="{8695b4e5-cafd-49af-abb3-0ccf607349ab}" />
 	<object class="MixerBusFader" id="{5692ddb6-3cf3-4735-9058-0e211047a4e0}" />
+	<object class="SpatialiserEffect" id="{cab82a5b-3b67-45a5-9ad6-5174c66d337f}">
+		<property name="minimumDistance">
+			<value>0.100000001</value>
+		</property>
+		<property name="overrideRange">
+			<value>true</value>
+		</property>
+	</object>
 	<object class="AutomationPoint" id="{a17fda2c-f19a-4de9-8d9e-c03fac8eedd6}">
 		<property name="position">
 			<value>5.5</value>

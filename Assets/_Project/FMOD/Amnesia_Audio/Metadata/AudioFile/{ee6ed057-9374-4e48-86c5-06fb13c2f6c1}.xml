@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{ee6ed057-9374-4e48-86c5-06fb13c2f6c1}">
 		<property name="assetPath">
-			<value>QTE Sounds/Hit Sound.wav</value>
+			<value>Player/Action/QTE Sounds/Hit Sound.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>

@@ -5,7 +5,7 @@
 			<value>After killing rabbit 3</value>
 		</property>
 		<property name="outputFormat">
-			<value>1</value>
+			<value>2</value>
 		</property>
 		<relationship name="folder">
 			<destination>{c8345e42-3011-44f5-9adb-0a16b6e6c848}</destination>
@@ -125,6 +125,7 @@
 	<object class="MixerBusEffectChain" id="{05d59550-1080-4305-ac50-6874bb6f9354}">
 		<relationship name="effects">
 			<destination>{bd8383ae-3f7e-48b8-afa1-7cbc1343cae4}</destination>
+			<destination>{99858ff8-1a0f-4a42-b28a-ae7ae30e0531}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{bf0f1d98-20f7-4366-81b3-8c3cb52725d3}" />
@@ -167,6 +168,14 @@
 	</object>
 	<object class="MixerBusPanner" id="{8d45b1b3-a332-4e2d-8149-02bb18a6b350}" />
 	<object class="MixerBusFader" id="{bd8383ae-3f7e-48b8-afa1-7cbc1343cae4}" />
+	<object class="SpatialiserEffect" id="{99858ff8-1a0f-4a42-b28a-ae7ae30e0531}">
+		<property name="minimumDistance">
+			<value>0.100000001</value>
+		</property>
+		<property name="overrideRange">
+			<value>true</value>
+		</property>
+	</object>
 	<object class="AutomationPoint" id="{e3bc7272-5741-424e-ba20-1d1067b27f3d}">
 		<property name="position">
 			<value>4.5</value>

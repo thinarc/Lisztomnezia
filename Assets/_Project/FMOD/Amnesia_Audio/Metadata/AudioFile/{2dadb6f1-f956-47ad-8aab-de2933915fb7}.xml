@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{2dadb6f1-f956-47ad-8aab-de2933915fb7}">
 		<property name="assetPath">
-			<value>QTE Sounds/Fail Sound.wav</value>
+			<value>Player/Action/QTE Sounds/Fail Sound.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>

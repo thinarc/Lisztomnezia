@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{e39a03dc-8c32-4f13-99d2-0306bd04b617}">
 		<property name="assetPath">
-			<value>QTE Sounds/Softer Hit.wav</value>
+			<value>Player/Action/QTE Sounds/Softer Hit.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>

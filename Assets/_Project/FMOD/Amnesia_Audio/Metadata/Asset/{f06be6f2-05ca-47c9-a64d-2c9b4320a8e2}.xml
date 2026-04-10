@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="EncodableAsset" id="{f06be6f2-05ca-47c9-a64d-2c9b4320a8e2}">
 		<property name="assetPath">
-			<value>QTE Sounds/</value>
+			<value>Player/Action/QTE Sounds/</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{cb79bd6d-1720-49ca-9f52-1842a35868bf}</destination>

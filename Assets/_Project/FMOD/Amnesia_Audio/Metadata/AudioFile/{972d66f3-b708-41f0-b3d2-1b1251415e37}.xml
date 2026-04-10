@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{972d66f3-b708-41f0-b3d2-1b1251415e37}">
 		<property name="assetPath">
-			<value>QTE Sounds/Slide OSU.wav</value>
+			<value>Player/Action/QTE Sounds/Slide OSU.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>

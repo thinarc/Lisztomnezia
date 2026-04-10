@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{32d02957-2b2c-4551-9859-77b0dd3bd658}">
+		<property name="name">
+			<value>DrawingIntens</value>
+		</property>
+		<relationship name="folder">
+			<destination>{69960fd1-dce5-439e-b5b4-d07b53b37962}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{0b0eec1b-fb8b-4c3a-9290-74de5a8bb2f7}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{0b0eec1b-fb8b-4c3a-9290-74de5a8bb2f7}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>
