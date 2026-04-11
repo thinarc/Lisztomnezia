@@ -406,10 +406,10 @@ MonoBehaviour:
   MasterBanks:
   - Master
   Banks:
-  - Action
   - Appears
   - Menu_Sound
   - Music
+  - OSU Action
   - Player
   - QTE sound
   - Speech

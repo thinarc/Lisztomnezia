@@ -1,4 +1,5 @@
 using _Code.Scripts.VFX;
+using _Project.Scripts.Dialog;
 using _Project.Scripts.Diary;
 using _Project.Scripts.Managers;
 using _Project.Scripts.osu_;
@@ -17,14 +18,16 @@ namespace _Project.Scripts.Rabbit
         private SpriteRenderer _sprite;
         private PlayerController _player;
 
+        private DialogBox _dialog;
+
         public int lvl = 1;
 
         private void Start()
         {
             _sprite = GetComponentInChildren<SpriteRenderer>();
-
             _sprite.DOFade(0, 0);
-            // OsuController.Instance.RunGame(1);
+            
+            _dialog = GetComponentInChildren<DialogBox>();
         }
 
         private async void ShowView()
@@ -35,8 +38,11 @@ namespace _Project.Scripts.Rabbit
             await _sprite.DOFade(1, 0.4f).SetEase(Ease.OutQuad).AsyncWaitForCompletion();
             _player.targetView = true;
             
-            // await OsuController.Instance.RunGame(lvl);
+            _dialog.TriggerMessage(transform);
+            _dialog.world = false;
+            
             await DiaryController.Instance.EnterDiary();
+            _dialog.TriggerMessage(transform);
             HideView();
         }
 

@@ -17,6 +17,7 @@ namespace _Project.Scripts.Diary
         [SerializeField] private TrailRenderer[] drawDots;
         [SerializeField] private float drawSpeedMulti = 1f;
         [SerializeField] private Vector3 trailOffset = new (-2f, 0f, 0f);
+        [SerializeField] private float[] dotTimes;
         
         private Animator _anim;
         
@@ -26,6 +27,7 @@ namespace _Project.Scripts.Diary
         private float _z;
 
         private bool _completed;
+        private bool _exit;
 
         private void Start()
         {
@@ -46,13 +48,18 @@ namespace _Project.Scripts.Diary
             cursorSpeed = Mathf.Clamp(cursorSpeed, cursorSpeed * 1.004f, cursorSpeed * 100f);
             
             if (!fire) return;
-            drawSpeedMulti += Time.deltaTime * 2f;
-            drawSpeedMulti = Mathf.Clamp(drawSpeedMulti, 1f, 20f);
+            drawSpeedMulti += Time.deltaTime * 2.6f;
+            drawSpeedMulti = Mathf.Clamp(drawSpeedMulti, 1f, 12f);
             _anim.SetFloat("DrawSpeed", Mathf.Clamp(drawSpeedMulti, 1f, 16f));
-            if (drawSpeedMulti >= 20f && !_completed)
+            if (drawSpeedMulti >= 12f && !_completed)
             {
-                _completed = true;
                 _anim.SetTrigger("Rip");
+                _completed = true;
+                
+                for (var i = 0; i < drawDots.Length; i++)
+                {
+                    dotTimes[i] = drawDots[i].time;
+                }
 
                 var b = 0;
                 while (true)
@@ -68,6 +75,8 @@ namespace _Project.Scripts.Diary
                 }
             }
         }
+
+        public void Completed() => _exit = true;
 
         private bool _drawZone;
         public void DropDraw()
@@ -178,9 +187,28 @@ namespace _Project.Scripts.Diary
             _anim.SetTrigger("Enter");
             _isOpen = true;
             
-            await UniTask.WaitUntil(() => _completed);
+            cursor.transform.localPosition = Vector3.zero;
+            if (dotTimes.Length > 0)
+            {
+                for (var i = 0; i < drawDots.Length; i++)
+                {
+                    drawDots[i].time = dotTimes[i];
+                }
+            }
+            else dotTimes = new float[drawDots.Length];
+            
+            await UniTask.WaitUntil(() => _exit);
+            _anim.SetBool("Draw", false);
             _anim.SetTrigger("Exit");
+            _kick = false;
+            _isMore = false;
+            _drawZone = false;
+            drawSpeedMulti = 1f;
+            cursorSpeed = _startCursorSpeed;
+            
             _completed = false;
+            _isOpen = false;
+            _exit = false;
         }
     }
 }

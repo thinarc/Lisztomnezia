@@ -33,6 +33,8 @@ public class UITilt : MonoBehaviour
 
     void Update()
     {
+        if (chtoRaw.Length == 0) return;
+        
         Rect raw = chtoRaw[0].uvRect;
         raw.position = new Vector2(chtoDir.x * chtoSpeed * Time.time, chtoDir.y * chtoSpeed * Time.time);
         chtoRaw[0].uvRect = raw;

@@ -4,6 +4,7 @@ using TMPEffects.Components;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 
 namespace _Project.Scripts.Common.EntryPoints
@@ -16,6 +17,7 @@ namespace _Project.Scripts.Common.EntryPoints
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Confined;
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[0];
             
             Instance = this;
             DontDestroyOnLoad(this);
