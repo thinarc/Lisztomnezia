@@ -9,6 +9,7 @@ namespace _Project.Scripts.Managers
         public MusicLoop MusicLoop { get; private set; }
         public OsuCase OsuCase { get; private set; }
         public OsuHandleCase OsuHandleCase { get; private set; }
+        public PoolPhrases PoolPhrases { get; private set; }
         
         private float _bgVolume;
 
@@ -49,5 +50,7 @@ namespace _Project.Scripts.Managers
             
             OsuHandleCase = new OsuHandleCase();
         }
+        
+        public void InjectPhrases(PoolPhrases inst) => PoolPhrases = inst;
     }
 }
