@@ -85,6 +85,30 @@ namespace _Project.Scripts.Diary
             _drawZone = false;
             cursorSpeed = _startCursorSpeed;
         }
+        
+        public void DropDrawZone()
+        {
+            if (!_isOpen || !_isMore) return;
+            _anim.SetTrigger("Transition");
+            _isMore = false;
+            _z = cursor.position.z;
+            TrailEmitting(false);
+                
+            if (!_isMore) OffsetTrail(false);
+            else OffsetTrail(true);
+        }
+        
+        public void EnterDraw()
+        {
+            if (!_isOpen || _isMore) return;
+            _anim.SetTrigger("Transition");
+            _isMore = true;
+            _z = cursor.position.z;
+            TrailEmitting(false);
+                
+            if (!_isMore) OffsetTrail(false);
+            else OffsetTrail(true);
+        }
 
         private void Update()
         {
@@ -98,18 +122,7 @@ namespace _Project.Scripts.Diary
                 _anim.SetBool("Draw", false);
             }
 
-            _cursorDir = _isMore ? new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) : Vector2.zero;
-            
-            if (_isOpen && Input.GetKeyDown(KeyCode.Mouse1))
-            {
-                _anim.SetTrigger("Transition");
-                _isMore = !_isMore;
-                _z = cursor.position.z;
-                TrailEmitting(false);
-                
-                if (!_isMore) OffsetTrail(false);
-                else OffsetTrail(true);
-            }
+            _cursorDir = _isOpen? new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) : Vector2.zero;
         }
 
         private float _kickTime = 2f;
@@ -198,10 +211,10 @@ namespace _Project.Scripts.Diary
             else dotTimes = new float[drawDots.Length];
             
             await UniTask.WaitUntil(() => _exit);
+            _anim.ResetTrigger("Transition");
             _anim.SetBool("Draw", false);
             _anim.SetTrigger("Exit");
             _kick = false;
-            _isMore = false;
             _drawZone = false;
             drawSpeedMulti = 1f;
             cursorSpeed = _startCursorSpeed;
