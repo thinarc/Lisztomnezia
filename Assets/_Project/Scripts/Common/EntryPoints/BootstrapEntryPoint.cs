@@ -1,3 +1,4 @@
+using _Project.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using SmnStyleHardline.Core;
 using TMPEffects.Components;
@@ -22,12 +23,14 @@ namespace _Project.Scripts.Common.EntryPoints
             Instance = this;
             DontDestroyOnLoad(this);
             
-            // SSHStyleManager.API.Outline.SetColorOutlineStrength(3f);
+            // OutlineMover.Initialize(3f);
             // SceneManager.LoadScene(1);
             
-            SSHStyleManager.API.Outline.SetColorOutlineStrength(0.11f);
+            OutlineMover.Initialize(0.11f);
             SceneManager.LoadScene(2);
         }
+
+        private void OnDisable() => OutlineMover.OnDisable();
 
         public TextMeshProUGUI escText;
         private float _esc = 2f;
@@ -35,6 +38,8 @@ namespace _Project.Scripts.Common.EntryPoints
 
         private async void Update()
         {
+            // OutlineMover.Tick();
+            
             if (Input.GetKey(KeyCode.Escape)) _esc -= Time.deltaTime;
             else if (_esc < 2f) _esc += Time.deltaTime * 4;
             

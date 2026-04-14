@@ -24,13 +24,13 @@ MonoBehaviour:
     EnvironmentLightInfluence: 0.34
   Skybox:
     BaseColor: {r: 0, g: 0, b: 0, a: 0}
-    AccentColor: {r: 0.084905684, g: 0.084905684, b: 0.084905684, a: 0}
-    StarsColor: {r: 0, g: 0, b: 0, a: 0}
+    AccentColor: {r: 0.03137255, g: 0.03137255, b: 0.03137255, a: 0}
+    StarsColor: {r: 0.21176471, g: 0.21176471, b: 0.21176471, a: 0}
     BandIntensity: 1.08768
     BandAdd: -0.23520002
     BandHorizontalWidth: 0.379312
     BandContrast: 2.68
-    StarmapDensity: 684
+    StarmapDensity: 681
     StarmapScale: 0.055
     StarmapSeed: 0.006
     StarmapTilt: 60

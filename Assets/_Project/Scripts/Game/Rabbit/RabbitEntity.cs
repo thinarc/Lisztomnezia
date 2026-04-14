@@ -2,7 +2,6 @@ using _Code.Scripts.VFX;
 using _Project.Scripts.Dialog;
 using _Project.Scripts.Diary;
 using _Project.Scripts.Managers;
-using _Project.Scripts.osu_;
 using _Project.Scripts.Sense;
 using DG.Tweening;
 using EvolveGames;
@@ -57,8 +56,9 @@ namespace _Project.Scripts.Rabbit
         
         private void OnTriggerEnter(Collider other)
         {
+            if (!other.CompareTag("Player")) return;
             _player = other.GetComponent<PlayerController>();
-            if (other.CompareTag("Player")) ShowView();
+            ShowView();
         }
     }
 }

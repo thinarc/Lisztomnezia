@@ -215,6 +215,7 @@ namespace _Project.Scripts.Diary
             _anim.SetBool("Draw", false);
             _anim.SetTrigger("Exit");
             _kick = false;
+            _isMore = false;
             _drawZone = false;
             drawSpeedMulti = 1f;
             cursorSpeed = _startCursorSpeed;
