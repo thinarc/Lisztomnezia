@@ -35,7 +35,7 @@ MonoBehaviour:
     StarmapSeed: 0.006
     StarmapTilt: 60
   Outline:
-    ColorOutlineColor: {r: 0.030927373, g: 0.037088294, b: 0.047169805, a: 1}
+    ColorOutlineColor: {r: 0.03137255, g: 0.03529412, b: 0.047058824, a: 1}
     ColorOutlineStrength: 0.11
     ColorOutlineNoiseScale: 2.77
     ColorOutlineNoiseIntensity: 0.26
