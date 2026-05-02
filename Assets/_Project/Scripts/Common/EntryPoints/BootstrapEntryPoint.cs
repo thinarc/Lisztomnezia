@@ -34,7 +34,7 @@ namespace _Project.Scripts.Common.EntryPoints
 
         public TextMeshProUGUI escText;
         private float _esc = 2f;
-        private bool waitDel = false;
+        private bool waitDel;
 
         private async void Update()
         {

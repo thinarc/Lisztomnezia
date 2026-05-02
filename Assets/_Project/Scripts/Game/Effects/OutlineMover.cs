@@ -38,7 +38,7 @@ namespace _Project.Scripts.Effects
 
         static OutlineScenario _scenario = OutlineScenario.Idle;
 
-        static ColorMode _colorMode = ColorMode.Base;
+        static ColorMode _colorMode = ColorMode.Base; 
         static ColorBreath _colorBreath = ColorBreath.None;
 
         static float _baseStrength;
@@ -47,8 +47,6 @@ namespace _Project.Scripts.Effects
         static bool _disable;
 
         static Color baseColor = new Color32(8,9,12,255);
-        static Color accentColor = new Color(0.9f,0.9f,0.9f);
-
         static Color warmColor = new Color(0.6f,0.3f,0.2f);
         static Color coldColor = new Color(0.3f,0.45f,0.7f);
         static Color horrorColor = new Color(0.4f,0.05f,0.05f);
@@ -61,6 +59,10 @@ namespace _Project.Scripts.Effects
 
             SSHStyleManager.API.Outline.SetColorOutlineStrength(strength);
             SSHStyleManager.API.Outline.SetColorOutlineColor(baseColor);
+            
+            _scenario = OutlineScenario.Idle;
+            _colorMode = ColorMode.Base; 
+            _colorBreath = ColorBreath.None;
 
             _disable = false;
 
@@ -75,41 +77,15 @@ namespace _Project.Scripts.Effects
 
                 switch(_scenario)
                 {
-                    case OutlineScenario.Idle:
-                        await Idle();
-                        break;
-
-                    case OutlineScenario.CalmBreath:
-                        await CalmBreath();
-                        break;
-
-                    case OutlineScenario.AmbientNoise:
-                        await AmbientNoise();
-                        break;
-
-                    case OutlineScenario.BlinkEvent:
-                        await BlinkEvent();
-                        break;
-
-                    case OutlineScenario.StressPulse:
-                        await StressPulse();
-                        break;
-
-                    case OutlineScenario.HorrorFlash:
-                        await HorrorFlash();
-                        break;
-
-                    case OutlineScenario.ScreenFlood:
-                        await ScreenFlood();
-                        break;
-
-                    case OutlineScenario.SlowPressure:
-                        await SlowPressure();
-                        break;
-
-                    case OutlineScenario.ChaosEvent:
-                        await ChaosEvent();
-                        break;
+                    case OutlineScenario.Idle: await Idle(); break;
+                    case OutlineScenario.CalmBreath: await CalmBreath(); break;
+                    case OutlineScenario.AmbientNoise: await AmbientNoise(); break;
+                    case OutlineScenario.BlinkEvent: await BlinkEvent(); break;
+                    case OutlineScenario.StressPulse: await StressPulse(); break;
+                    case OutlineScenario.HorrorFlash: await HorrorFlash(); break;
+                    case OutlineScenario.ScreenFlood: await ScreenFlood(); break;
+                    case OutlineScenario.SlowPressure: await SlowPressure(); break;
+                    case OutlineScenario.ChaosEvent: await ChaosEvent(); break;
                 }
             }
         }
@@ -126,26 +102,30 @@ namespace _Project.Scripts.Effects
 
             switch(_colorMode)
             {
-                case ColorMode.Base: c = baseColor; break;
                 case ColorMode.Warm: c = warmColor; break;
                 case ColorMode.Cold: c = coldColor; break;
                 case ColorMode.Horror: c = horrorColor; break;
                 case ColorMode.Dream: c = dreamColor; break;
             }
 
+            float time = Time.time;
+
             if(_colorBreath != ColorBreath.None)
             {
-                float power = 0.02f;
+                float power = (_colorBreath == ColorBreath.Soft) ? 0.02f :
+                              (_colorBreath == ColorBreath.Medium) ? 0.05f : 0.08f;
 
-                if(_colorBreath == ColorBreath.Medium) power = 0.05f;
-                if(_colorBreath == ColorBreath.Strong) power = 0.08f;
+                float t = Mathf.Sin(time * Random.Range(0.4f,0.9f)) * power;
 
-                float t = Mathf.Sin(Time.time * 0.6f) * power;
-
-                c.r += t;
-                c.g += t;
-                c.b += t;
+                c += new Color(t,t,t);
             }
+
+            float drift = Mathf.PerlinNoise(time * 0.1f, 42f) * 0.03f;
+            c.r += drift;
+            c.g -= drift * 0.5f;
+
+            float noise = (Mathf.PerlinNoise(time * 6f, 99f) - 0.5f) * 0.02f;
+            c += new Color(noise,noise,noise);
 
             return c;
         }
@@ -159,106 +139,142 @@ namespace _Project.Scripts.Effects
 
         static async UniTask CalmBreath()
         {
-            float t = Mathf.Sin(Time.time*0.5f);
+            float freq = 0.4f + Mathf.PerlinNoise(Time.time*0.2f,0)*0.4f;
+            float amp = 0.02f + Mathf.PerlinNoise(0,Time.time*0.3f)*0.03f;
 
-            float target = _baseStrength + t*0.04f;
+            float t = Mathf.Sin(Time.time * freq);
+            float target = _baseStrength + t * amp;
+
+            if(Random.value < 0.01f)
+                target += Random.Range(-0.03f,0.03f);
 
             _currentStrength = Mathf.Lerp(_currentStrength,target,Time.deltaTime*2);
 
             SetOutline(_currentStrength);
-
             await UniTask.NextFrame();
         }
 
         static async UniTask AmbientNoise()
         {
-            float n = Mathf.PerlinNoise(Time.time*0.7f,0);
+            float t = Time.time;
 
-            float target = Mathf.Lerp(0.15f,0.5f,n);
+            float n = Mathf.PerlinNoise(t*0.7f,0)*0.6f +
+                      Mathf.PerlinNoise(t*2.1f,10)*0.3f +
+                      Mathf.PerlinNoise(t*5.3f,25)*0.1f;
 
-            _currentStrength = Mathf.Lerp(_currentStrength,target,Time.deltaTime*3);
+            float target = Mathf.Lerp(0.1f,0.55f,n);
+
+            if(Random.value < 0.02f)
+                target = Random.Range(-0.02f,0.6f);
+
+            _currentStrength = Mathf.Lerp(_currentStrength,target,Time.deltaTime*Random.Range(2f,4f));
 
             SetOutline(_currentStrength);
-
             await UniTask.NextFrame();
         }
 
-        // blink → breath
         static async UniTask BlinkEvent()
         {
-            SetOutline(0.07f);
-            await UniTask.Delay(50);
+            SetOutline(Random.Range(0.02f,0.1f));
+            await UniTask.Delay(Random.Range(40,90));
 
-            SetOutline(0.6f);
-            await UniTask.Delay(120);
+            SetOutline(Random.Range(0.4f,0.7f));
+            await UniTask.Delay(Random.Range(80,140));
 
             _scenario = OutlineScenario.CalmBreath;
         }
 
-        // серия импульсов
         static async UniTask StressPulse()
         {
-            for(int i=0;i<4;i++)
-            {
-                SetOutline(Random.Range(0.04f,0.15f));
-                await UniTask.Delay(70);
+            int count = Random.Range(3,7);
 
-                SetOutline(0.6f);
-                await UniTask.Delay(120);
+            for(int i=0;i<count;i++)
+            {
+                SetOutline(Random.Range(-0.02f,0.15f));
+                await UniTask.Delay(Random.Range(40,120));
+
+                SetOutline(Random.Range(0.4f,0.7f));
+                await UniTask.Delay(Random.Range(80,180));
+
+                if(Random.value < 0.25f)
+                {
+                    SetOutline(Random.Range(0.2f,0.5f));
+                    await UniTask.Delay(Random.Range(30,90));
+                }
             }
 
             _scenario = OutlineScenario.AmbientNoise;
         }
 
-        // flash → агрессия
         static async UniTask HorrorFlash()
         {
-            SetOutline(-0.04f);
-            await UniTask.Delay(100);
+            int flashes = Random.Range(1,3);
 
-            SetOutline(0.08f);
-            await UniTask.Delay(80);
+            for(int i=0;i<flashes;i++)
+            {
+                SetOutline(Random.Range(-0.08f,0.02f));
+                await UniTask.Delay(Random.Range(60,140));
 
-            _scenario = OutlineScenario.StressPulse;
+                SetOutline(Random.Range(0.05f,0.2f));
+                await UniTask.Delay(Random.Range(60,120));
+            }
+
+            _scenario = (Random.value < 0.3f)
+                ? OutlineScenario.ChaosEvent
+                : OutlineScenario.StressPulse;
         }
 
-        // flood → дыхание
         static async UniTask ScreenFlood()
         {
-            SetOutline(-0.05f);
-
-            await UniTask.Delay(200);
+            SetOutline(Random.Range(-0.08f,-0.02f));
+            await UniTask.Delay(Random.Range(150,300));
 
             _scenario = OutlineScenario.CalmBreath;
         }
 
-        // медленное давление
         static async UniTask SlowPressure()
         {
-            float target = Mathf.Lerp(0.6f,0.02f,Mathf.PingPong(Time.time*0.05f,1));
+            float t = Time.time * 0.05f;
 
-            _currentStrength = Mathf.Lerp(_currentStrength,target,Time.deltaTime);
+            float wave = Mathf.PingPong(t,1);
+            float noise = Mathf.PerlinNoise(t*2f,5f)*0.2f;
+
+            float target = Mathf.Lerp(0.6f,0.02f,wave) + noise;
+
+            if(Random.value < 0.005f)
+                target = -0.05f;
+
+            _currentStrength = Mathf.Lerp(_currentStrength,target,Time.deltaTime*Random.Range(0.5f,1.5f));
 
             SetOutline(_currentStrength);
-
             await UniTask.NextFrame();
         }
 
         static async UniTask ChaosEvent()
         {
-            for(int i=0;i<6;i++)
+            int count = Random.Range(5,10);
+
+            for(int i=0;i<count;i++)
             {
-                SetOutline(Random.Range(-0.03f,0.6f));
-                await UniTask.Delay(Random.Range(40,120));
+                float value = Random.Range(-0.05f,0.7f);
+
+                if(Random.value < 0.15f)
+                    value = Random.Range(-0.1f,0.9f);
+
+                SetOutline(value);
+                await UniTask.Delay(Random.Range(30,150));
             }
 
-            _scenario = OutlineScenario.Idle;
+            float r = Random.value;
+
+            _scenario = (r < 0.33f) ? OutlineScenario.Idle :
+                        (r < 0.66f) ? OutlineScenario.CalmBreath :
+                                      OutlineScenario.AmbientNoise;
         }
 
         static void HandleDevKeys()
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-
             if(Input.GetKeyDown(KeyCode.Alpha1)) _scenario = OutlineScenario.Idle;
             if(Input.GetKeyDown(KeyCode.Alpha2)) _scenario = OutlineScenario.CalmBreath;
             if(Input.GetKeyDown(KeyCode.Alpha3)) _scenario = OutlineScenario.AmbientNoise;
@@ -268,19 +284,12 @@ namespace _Project.Scripts.Effects
             if(Input.GetKeyDown(KeyCode.Alpha7)) _scenario = OutlineScenario.ScreenFlood;
             if(Input.GetKeyDown(KeyCode.Alpha8)) _scenario = OutlineScenario.SlowPressure;
             if(Input.GetKeyDown(KeyCode.Alpha9)) _scenario = OutlineScenario.ChaosEvent;
-
-            if(Input.GetKeyDown(KeyCode.Y)) _colorMode = ColorMode.Base;
-            if(Input.GetKeyDown(KeyCode.U)) _colorMode = ColorMode.Warm;
-            if(Input.GetKeyDown(KeyCode.I)) _colorMode = ColorMode.Cold;
-            if(Input.GetKeyDown(KeyCode.O)) _colorMode = ColorMode.Horror;
-            if(Input.GetKeyDown(KeyCode.P)) _colorMode = ColorMode.Dream;
-
-            if(Input.GetKeyDown(KeyCode.J)) _colorBreath = ColorBreath.Soft;
-            if(Input.GetKeyDown(KeyCode.K)) _colorBreath = ColorBreath.Medium;
-            if(Input.GetKeyDown(KeyCode.L)) _colorBreath = ColorBreath.Strong;
-
 #endif
         }
+
+        public static void SetScenario(OutlineScenario scenario) => _scenario = scenario;
+        public static void SetColor(ColorMode mode) => _colorMode = mode;
+        public static void SetBreath(ColorBreath breath) => _colorBreath = breath;
 
         public static void OnDisable()
         {

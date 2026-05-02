@@ -1,3 +1,4 @@
+using _Project.Scripts.Effects;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.Utilities;
@@ -105,6 +106,7 @@ namespace _Project.Scripts.Diary
             _isMore = true;
             _z = cursor.position.z;
             TrailEmitting(false);
+            NarrativeOutlineDirector.IntensifyRabbitSketch();
                 
             if (!_isMore) OffsetTrail(false);
             else OffsetTrail(true);
@@ -199,6 +201,7 @@ namespace _Project.Scripts.Diary
         {
             _anim.SetTrigger("Enter");
             _isOpen = true;
+            NarrativeOutlineDirector.StartRabbitSketch();
             
             cursor.transform.localPosition = Vector3.zero;
             if (dotTimes.Length > 0)
@@ -223,6 +226,10 @@ namespace _Project.Scripts.Diary
             _completed = false;
             _isOpen = false;
             _exit = false;
+            
+            await NarrativeOutlineDirector.FinishRabbitSketch();
+            await NarrativeOutlineDirector.KillEvent();
+            NarrativeOutlineDirector.ReturnToCalm();
         }
     }
 }
