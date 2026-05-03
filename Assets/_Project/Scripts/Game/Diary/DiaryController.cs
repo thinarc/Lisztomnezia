@@ -40,6 +40,27 @@ namespace _Project.Scripts.Diary
             
             _startCursorSpeed = cursorSpeed;
         }
+        
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.W)) _anim.SetBool("Walk", true);
+            else if (Input.GetKeyUp(KeyCode.W)) _anim.SetBool("Walk", false);
+            
+            if (Input.GetKeyDown(KeyCode.LeftShift)) _anim.SetFloat("RunMultiplier", 1.6f);
+            else if (Input.GetKeyUp(KeyCode.LeftShift)) _anim.SetFloat("RunMultiplier", 1f);
+            
+            if (Input.GetKeyDown(KeyCode.Mouse0)) TrailEmitting(true);
+            else if (Input.GetKeyUp(KeyCode.Mouse0)) TrailEmitting(false);
+            if (!Input.GetKey(KeyCode.Mouse0) || !_drawZone)
+            {
+                drawSpeedMulti -= Time.deltaTime * 16f;
+                drawSpeedMulti = Mathf.Clamp(drawSpeedMulti, 1f, drawSpeedMulti);
+                _anim.SetFloat("DrawSpeed", Mathf.Clamp(drawSpeedMulti, 1f, 16f));
+                _anim.SetBool("Draw", false);
+            }
+
+            _cursorDir = _isOpen? new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) : Vector2.zero;
+        }
 
         public async void FillDraw()
         {
@@ -110,21 +131,6 @@ namespace _Project.Scripts.Diary
                 
             if (!_isMore) OffsetTrail(false);
             else OffsetTrail(true);
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Mouse0)) TrailEmitting(true);
-            else if (Input.GetKeyUp(KeyCode.Mouse0)) TrailEmitting(false);
-            if (!Input.GetKey(KeyCode.Mouse0) || !_drawZone)
-            {
-                drawSpeedMulti -= Time.deltaTime * 16f;
-                drawSpeedMulti = Mathf.Clamp(drawSpeedMulti, 1f, drawSpeedMulti);
-                _anim.SetFloat("DrawSpeed", Mathf.Clamp(drawSpeedMulti, 1f, 16f));
-                _anim.SetBool("Draw", false);
-            }
-
-            _cursorDir = _isOpen? new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) : Vector2.zero;
         }
 
         private float _kickTime = 2f;
@@ -227,8 +233,8 @@ namespace _Project.Scripts.Diary
             _isOpen = false;
             _exit = false;
             
-            await NarrativeOutlineDirector.FinishRabbitSketch();
-            await NarrativeOutlineDirector.KillEvent();
+            if (Random.Range(0, 2) == 1) await NarrativeOutlineDirector.FinishRabbitSketch();
+            else await NarrativeOutlineDirector.KillEvent();
             NarrativeOutlineDirector.ReturnToCalm();
         }
     }

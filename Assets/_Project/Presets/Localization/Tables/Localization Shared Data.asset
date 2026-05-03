@@ -19,6 +19,10 @@ MonoBehaviour:
     m_Key: collect_touch
     m_Metadata:
       m_Items: []
+  - m_Id: 16052869135327232
+    m_Key: first_entry
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

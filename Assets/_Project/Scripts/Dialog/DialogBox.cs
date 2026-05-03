@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -11,6 +12,9 @@ namespace _Project.Scripts.Dialog
         
         [SerializeField, Space(5)] private bool onTrigger;
         public bool world = true;
+        public bool person;
+
+        private bool _type;
 
         private void Start()
         {
@@ -24,13 +28,21 @@ namespace _Project.Scripts.Dialog
             if (other.CompareTag("Player") && onTrigger) TriggerMessage();
         }
 
-        public void TriggerMessage(Transform pos = null, bool downY = false)
+        public async void TriggerMessage(Transform pos = null, bool downY = false)
         {
             var message = _message.Dequeue() ?? "no message";
 
-            if (!world) DialogController.Instances[0].ShowMessage(message);
-            else DialogController.Instances[1].ShowMessage(message, pos, downY);
+            _type = true;
+            if (!world)
+            {
+                if (person) DialogController.Instances[0].personCall = true;
+                await DialogController.Instances[0].ShowMessage(message);
+            }
+            else await DialogController.Instances[1].ShowMessage(message, pos, downY);
+            _type = false;
         }
+
+        public async UniTask TypeWait() => await UniTask.WaitUntil(() => !_type);
 
         public void UpdateLocale(string newMessage)
         {

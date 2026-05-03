@@ -19,8 +19,6 @@ namespace _Project.Scripts.Rabbit
 
         private DialogBox _dialog;
 
-        public int lvl = 1;
-
         private void Start()
         {
             _sprite = GetComponentInChildren<SpriteRenderer>();

@@ -95,8 +95,8 @@ namespace EvolveGames
             }
             Vector3 forward = transform.TransformDirection(Vector3.forward);
             Vector3 right = transform.TransformDirection(Vector3.right);
-            // isRunning = !isCrough ? CanRunning ? Input.GetKey(KeyCode.LeftShift) : false : false;
-            isRunning = !isCrough ? CanRunning ? false : false : false;
+            isRunning = !isCrough ? CanRunning ? Input.GetKey(KeyCode.LeftShift) : false : false;
+            // isRunning = !isCrough ? CanRunning ? false : false : false;
             vertical = canMove ? (isRunning ? RunningValue : WalkingValue) * Input.GetAxis("Vertical") : 0;
             if (vertical < 0) vertical = 0;
             // if (vertical < 0) vertical = Random.Range(vertical, vertical * 16f) / 40f;

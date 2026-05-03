@@ -26,6 +26,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 5486849592433836183
+  - m_Id: 16052869135327232
+    m_Localized: "I\u2019m so glad I found you. It\u2019s a little less scary when
+      you\u2019re not alone."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

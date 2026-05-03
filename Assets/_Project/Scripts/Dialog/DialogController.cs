@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
@@ -12,6 +13,9 @@ namespace _Project.Scripts.Dialog
         
         [SerializeField] private TextMeshProUGUI message;
         private CanvasGroup _canvas;
+        
+        [SerializeField] private TextMeshProUGUI personMessage;
+        public bool personCall;
 
         [SerializeField, Space(5)] private bool world;
         
@@ -23,11 +27,12 @@ namespace _Project.Scripts.Dialog
             
             _canvas = GetComponent<CanvasGroup>();
 
-            if (LocalizationSettings.SelectedLocale == LocalizationSettings.AvailableLocales.Locales[1])
-                message.fontSize /= 2f;
+            if (LocalizationSettings.SelectedLocale != LocalizationSettings.AvailableLocales.Locales[1]) return;
+            message.fontSize /= 2f;
+            if (personMessage) personMessage.fontSize /= 2f;
         }
 
-        public async void ShowMessage(string text, Transform newZ = null, bool downY = false)
+        public async UniTask ShowMessage(string text, Transform newZ = null, bool downY = false)
         {
             if (newZ != null)
             {
@@ -38,17 +43,24 @@ namespace _Project.Scripts.Dialog
                 
                 transform.position = pos;
             }
+
+            var m = message;
+            if (personCall && personMessage)
+            {
+                m = personMessage;
+                personCall = false;
+            }
             
-            message.text = "";
+            m.text = "";
             _canvas.DOFade(1, 0.4f).SetEase(Ease.OutExpo);
-            message.text = text;
+            m.text = text;
 
             var delay = 80;
             if (newZ != null) delay = 200;
             
             await UniTask.Delay(text.Length * delay);
-            await _canvas.DOFade(0, 0.4f).SetEase(Ease.OutExpo).AsyncWaitForCompletion();
-            message.text = "";
+            _canvas.DOFade(0, 0.4f).SetEase(Ease.OutExpo);
+            m.text = "";
         }
     }
 }
