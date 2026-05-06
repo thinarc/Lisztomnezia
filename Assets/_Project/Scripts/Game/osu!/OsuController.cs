@@ -74,8 +74,8 @@ namespace _Project.Scripts.osu_
 
         private bool _fail;
         private bool _pass;
-
-        private void Start()
+        
+        public void Initialize()
         {
             Instance = this;
             
@@ -99,6 +99,11 @@ namespace _Project.Scripts.osu_
             speedSlider.value = 0.5f;
             
             repeatText.gameObject.SetActive(false);
+            
+            player = FindAnyObjectByType<PlayerController>();
+            gameScreen = player.GetComponent<PlayerFootsteps>().GiveGameScreen();
+            
+            GetComponentInParent<Canvas>().worldCamera = Camera.main;
         }
 
         public TextMeshProUGUI defeatText;

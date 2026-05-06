@@ -1,4 +1,5 @@
 using _Project.Scripts.Effects;
+using _Project.Scripts.osu_;
 using Cysharp.Threading.Tasks;
 using SmnStyleHardline.Core;
 using TMPEffects.Components;
@@ -22,6 +23,8 @@ namespace _Project.Scripts.Common.EntryPoints
             
             Instance = this;
             DontDestroyOnLoad(this);
+
+            OsuContainer.Initialized = false;
             
             // OutlineMover.Initialize(3f);
             // SceneManager.LoadScene(1);

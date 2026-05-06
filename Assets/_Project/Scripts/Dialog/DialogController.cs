@@ -55,12 +55,20 @@ namespace _Project.Scripts.Dialog
             _canvas.DOFade(1, 0.4f).SetEase(Ease.OutExpo);
             m.text = text;
 
-            var delay = 80;
+            var delay = 60;
             if (newZ != null) delay = 200;
-            
-            await UniTask.Delay(text.Length * delay);
-            _canvas.DOFade(0, 0.4f).SetEase(Ease.OutExpo);
-            m.text = "";
+
+            var wait = text.Length * delay;
+            Fade();
+
+            async void Fade()
+            {
+                await UniTask.Delay(wait);
+                _canvas.DOFade(0, 0.6f).SetEase(Ease.InExpo);
+                m.text = "";
+            }
+
+            await UniTask.Delay(wait / 2);
         }
     }
 }

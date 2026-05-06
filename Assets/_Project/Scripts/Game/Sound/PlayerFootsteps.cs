@@ -8,6 +8,9 @@ namespace _Project.Scripts.Sound
     public class PlayerFootsteps : MonoBehaviour
     {
         [SerializeField] private PlayerController playerController;
+        [SerializeField] private GameObject gameScreen;
+        
+        public GameObject GiveGameScreen() => gameScreen; 
         
         private EventInstance _footsteps;
         private float _speed;

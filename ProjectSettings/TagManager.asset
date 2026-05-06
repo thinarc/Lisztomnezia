@@ -6,6 +6,7 @@ TagManager:
   tags:
   - BigSphere
   - Diary
+  - TransitionScreen
   layers:
   - Default
   - TransparentFX

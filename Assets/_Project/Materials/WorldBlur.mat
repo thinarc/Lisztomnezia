@@ -278,7 +278,7 @@ Material:
     - _FullDistortionFade: 1
     - _FullGlowDissolveFade: 0.4
     - _FullGlowDissolveWidth: 0.5
-    - _GaussianBlurFade: 1
+    - _GaussianBlurFade: 0
     - _GaussianBlurOffset: 0.5
     - _GlitchBrightness: 4
     - _GlitchFade: 0.03

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace EvolveGames
 {
@@ -67,7 +68,7 @@ namespace EvolveGames
         float installGravity;
         bool WallDistance;
         [HideInInspector] public float WalkingValue;
-        void Start()
+        async void Start()
         {
             characterController = GetComponent<CharacterController>();
             if (Items == null && GetComponent<ItemChange>()) Items = GetComponent<ItemChange>();

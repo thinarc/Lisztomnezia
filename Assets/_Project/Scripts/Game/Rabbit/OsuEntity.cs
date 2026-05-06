@@ -1,6 +1,7 @@
 using _Code.Scripts.VFX;
 using _Project.Scripts.Dialog;
 using _Project.Scripts.Managers;
+using _Project.Scripts.osu_;
 using DG.Tweening;
 using EvolveGames;
 using UnityEngine;
@@ -38,10 +39,8 @@ namespace _Project.Scripts.Rabbit
             _player.targetView = true;
             
             _dialog.TriggerMessage(transform);
-            _dialog.world = false;
-
             await _dialog.TypeWait();
-            _dialog.TriggerMessage(transform);
+            await StarterOsu.LoadAndRunGame(lvl);
             HideView();
         }
 
@@ -51,6 +50,8 @@ namespace _Project.Scripts.Rabbit
             SoundManager.Instance.MusicLoop.KillNoise();
             ParticleSystem_FogAvoidPlayer.Instances.ForEach(p => p.ReturnView());
             await _sprite.DOFade(0, 0.2f).SetEase(Ease.OutQuad).AsyncWaitForCompletion();
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             _player.targetView = false;
         }
         
