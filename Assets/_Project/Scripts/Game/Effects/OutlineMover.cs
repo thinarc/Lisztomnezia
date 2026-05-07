@@ -14,7 +14,7 @@ namespace _Project.Scripts.Effects
             BlinkEvent = 4,
             StressPulse = 5,
             HorrorFlash = 6,
-            ScreenFlood = 7,
+            OnOsu = 7,
             SlowPressure = 8,
             ChaosEvent = 9
         }
@@ -83,7 +83,7 @@ namespace _Project.Scripts.Effects
                     case OutlineScenario.BlinkEvent: await BlinkEvent(); break;
                     case OutlineScenario.StressPulse: await StressPulse(); break;
                     case OutlineScenario.HorrorFlash: await HorrorFlash(); break;
-                    case OutlineScenario.ScreenFlood: await ScreenFlood(); break;
+                    case OutlineScenario.OnOsu: await OnOsu(); break;
                     case OutlineScenario.SlowPressure: await SlowPressure(); break;
                     case OutlineScenario.ChaosEvent: await ChaosEvent(); break;
                 }
@@ -224,12 +224,15 @@ namespace _Project.Scripts.Effects
                 : OutlineScenario.StressPulse;
         }
 
-        static async UniTask ScreenFlood()
+        static async UniTask OnOsu()
         {
-            SetOutline(Random.Range(-0.08f,-0.02f));
-            await UniTask.Delay(Random.Range(150,300));
-
-            _scenario = OutlineScenario.CalmBreath;
+            while (true)
+            {
+                _currentStrength = Mathf.MoveTowards(_currentStrength, 3f, Time.deltaTime * 2);
+                SetOutline(_currentStrength);
+                await UniTask.Yield();
+                if (Mathf.Approximately(_currentStrength, 3f) || _scenario != OutlineScenario.OnOsu) break;
+            }
         }
 
         static async UniTask SlowPressure()
@@ -281,7 +284,7 @@ namespace _Project.Scripts.Effects
             if(Input.GetKeyDown(KeyCode.Alpha4)) _scenario = OutlineScenario.BlinkEvent;
             if(Input.GetKeyDown(KeyCode.Alpha5)) _scenario = OutlineScenario.StressPulse;
             if(Input.GetKeyDown(KeyCode.Alpha6)) _scenario = OutlineScenario.HorrorFlash;
-            if(Input.GetKeyDown(KeyCode.Alpha7)) _scenario = OutlineScenario.ScreenFlood;
+            if(Input.GetKeyDown(KeyCode.Alpha7)) _scenario = OutlineScenario.OnOsu;
             if(Input.GetKeyDown(KeyCode.Alpha8)) _scenario = OutlineScenario.SlowPressure;
             if(Input.GetKeyDown(KeyCode.Alpha9)) _scenario = OutlineScenario.ChaosEvent;
 #endif

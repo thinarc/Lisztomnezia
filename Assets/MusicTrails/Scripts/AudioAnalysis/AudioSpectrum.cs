@@ -145,6 +145,11 @@ public class AudioSpectrum : MonoBehaviour
     /// <param name="samples">The output array</param>
     public void GetSamplesMultiplied(out float[] samples)
     {
+        if (this.samples == null)
+        {
+            samples = null;
+            return;
+        }
         samples = new float[this.samples.Length];
         for (int i = 0; i < this.samples.Length; i++)
         {
@@ -162,6 +167,11 @@ public class AudioSpectrum : MonoBehaviour
         int i = frequencies[band].MinFrequency;
         int j = frequencies[band].MaxFrequency;
 
+        if (this.samples == null)
+        {
+            samples = null;
+            return;
+        }
         float[] tempSamples = this.samples.Skip(i).Take(j - i + 1).ToArray();
         samples = new float[tempSamples.Length];
         for (int k = 0; k < tempSamples.Length; k++)

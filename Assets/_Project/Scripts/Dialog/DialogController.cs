@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
@@ -68,7 +67,7 @@ namespace _Project.Scripts.Dialog
                 m.text = "";
             }
 
-            await UniTask.Delay(wait / 2);
+            await UniTask.Delay(wait / 6);
         }
     }
 }

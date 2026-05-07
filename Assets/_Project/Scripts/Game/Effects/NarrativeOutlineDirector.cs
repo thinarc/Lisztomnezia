@@ -104,7 +104,7 @@ namespace _Project.Scripts.Effects
          */
         public static void GirlChallengeStart()
         {
-            OutlineMover.SetScenario(OutlineMover.OutlineScenario.ChaosEvent);
+            OutlineMover.SetScenario(OutlineMover.OutlineScenario.OnOsu);
         }
     }
 }

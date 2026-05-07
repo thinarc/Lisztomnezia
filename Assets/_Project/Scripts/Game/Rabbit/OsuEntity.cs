@@ -1,5 +1,6 @@
 using _Code.Scripts.VFX;
 using _Project.Scripts.Dialog;
+using _Project.Scripts.Effects;
 using _Project.Scripts.Managers;
 using _Project.Scripts.osu_;
 using DG.Tweening;
@@ -35,13 +36,24 @@ namespace _Project.Scripts.Rabbit
             _player.canMove = false;
             ParticleSystem_FogAvoidPlayer.Instances.ForEach(p => p.NewView(transform));
             
+            NarrativeOutlineDirector.GirlEncounterStart();
+            
             await _sprite.DOFade(1, 0.4f).SetEase(Ease.OutQuad).AsyncWaitForCompletion();
             _player.targetView = true;
             
+            NarrativeOutlineDirector.GirlConversation();
+            
             _dialog.TriggerMessage(transform);
             await _dialog.TypeWait();
+            
+            NarrativeOutlineDirector.GirlChallengePrepare();
+            NarrativeOutlineDirector.GirlChallengeTension();
+            NarrativeOutlineDirector.GirlChallengeStart();
+            
             await StarterOsu.LoadAndRunGame(lvl);
             HideView();
+            
+            NarrativeOutlineDirector.ReturnToCalm();
         }
 
         private async void HideView()

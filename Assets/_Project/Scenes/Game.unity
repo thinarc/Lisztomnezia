@@ -66678,7 +66678,7 @@ MonoBehaviour:
   writeOnNewText: 1
   useScaledTime: 1
   delays:
-    delay: 0.02
+    delay: 0.01
     whitespaceDelay: 0
     whitespaceDelayType: 0
     linebreakDelay: 0

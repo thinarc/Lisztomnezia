@@ -53,6 +53,8 @@ public class BeatDetection : MonoBehaviour
         {
             audioSpectrum.GetSamplesMultiplied(out currentSpectrum, frequencyBand);
         }
+        
+        if (currentSpectrum == null) return;
 
         if (previousSpectrum == null)
         {
