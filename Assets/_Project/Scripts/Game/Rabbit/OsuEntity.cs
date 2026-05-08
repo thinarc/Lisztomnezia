@@ -45,14 +45,16 @@ namespace _Project.Scripts.Rabbit
             
             _dialog.TriggerMessage(transform);
             await _dialog.TypeWait();
+
+            if (lvl != 0)
+            {
+                NarrativeOutlineDirector.GirlChallengePrepare();
+                NarrativeOutlineDirector.GirlChallengeTension();
+                NarrativeOutlineDirector.GirlChallengeStart();
+                await StarterOsu.LoadAndRunGame(lvl);
+            }
             
-            NarrativeOutlineDirector.GirlChallengePrepare();
-            NarrativeOutlineDirector.GirlChallengeTension();
-            NarrativeOutlineDirector.GirlChallengeStart();
-            
-            await StarterOsu.LoadAndRunGame(lvl);
             HideView();
-            
             NarrativeOutlineDirector.ReturnToCalm();
         }
 
