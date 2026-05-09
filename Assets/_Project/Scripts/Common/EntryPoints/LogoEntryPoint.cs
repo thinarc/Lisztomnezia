@@ -1,3 +1,4 @@
+using _Project.Scripts.Effects;
 using _Project.Scripts.HUD;
 using _Project.Scripts.Managers;
 using Cysharp.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace _Project.Scripts.Common.EntryPoints
             await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0));
             xClick.text = "(0x)";
             
-            SSHStyleManager.API.Outline.SetColorOutlineStrength(0.11f);
+            OutlineMover.Initialize(0.11f);
             SceneManager.LoadScene(2);
         }
     }

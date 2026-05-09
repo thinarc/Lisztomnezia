@@ -1,4 +1,5 @@
 using _Project.Scripts.Effects;
+using _Project.Scripts.Managers;
 using _Project.Scripts.osu_;
 using Cysharp.Threading.Tasks;
 using SmnStyleHardline.Core;
@@ -19,18 +20,23 @@ namespace _Project.Scripts.Common.EntryPoints
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Confined;
-            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[0];
+            
+            LangManager.InitLocale(0);
+            
+            PlayerPrefs.SetFloat("bg", 1f);
+            PlayerPrefs.SetFloat("sfx", 0.75f);
+            SoundManager.Instance.Initialize();
             
             Instance = this;
             DontDestroyOnLoad(this);
 
             OsuContainer.Initialized = false;
             
-            // OutlineMover.Initialize(3f);
-            // SceneManager.LoadScene(1);
+            OutlineMover.Initialize(3f);
+            SceneManager.LoadScene(1);
             
-            OutlineMover.Initialize(0.11f);
-            SceneManager.LoadScene(2);
+            // OutlineMover.Initialize(0.11f);
+            // SceneManager.LoadScene(2);
         }
 
         private void OnDisable() => OutlineMover.OnDisable();
@@ -41,8 +47,6 @@ namespace _Project.Scripts.Common.EntryPoints
 
         private async void Update()
         {
-            // OutlineMover.Tick();
-            
             if (Input.GetKey(KeyCode.Escape)) _esc -= Time.deltaTime;
             else if (_esc < 2f) _esc += Time.deltaTime * 4;
             

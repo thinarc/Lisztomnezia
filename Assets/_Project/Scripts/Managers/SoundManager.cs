@@ -1,4 +1,5 @@
 using _Project.Scripts.Sound;
+using FMOD.Studio;
 using UnityEngine;
 
 namespace _Project.Scripts.Managers
@@ -10,6 +11,11 @@ namespace _Project.Scripts.Managers
         public OsuCase OsuCase { get; private set; }
         public OsuHandleCase OsuHandleCase { get; private set; }
         public PoolPhrases PoolPhrases { get; private set; }
+
+        private Bus _bgBus;
+        private Bus _osuBus;
+        private Bus _sfxBus;
+        private Bus _voiceBus;
         
         private float _bgVolume;
 
@@ -20,6 +26,8 @@ namespace _Project.Scripts.Managers
             {
                 if (value is > 1f or < 0) return;
                 _bgVolume = value;
+                _bgBus.setVolume(_bgVolume);
+                _osuBus.setVolume(_bgVolume);
             }
         }
         
@@ -32,15 +40,42 @@ namespace _Project.Scripts.Managers
             {
                 if (value is > 1f or < 0) return;
                 _sfxVolume = value;
+                _sfxBus.setVolume(_sfxVolume);
+                _voiceBus.setVolume(_sfxVolume);
             }
         }
 
-        private void Start()
+        private void Update()
         {
-            Instance = this;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                Time.timeScale = 10;
+                _osuBus.getChannelGroup(out var ch);
+                _osuBus.setVolume(0);
+                if (ch.hasHandle()) ch.setPitch(Time.timeScale * 2);
+            }
+            else if (Input.GetKeyUp(KeyCode.K))
+            {
+                Time.timeScale = 1;
+                _osuBus.getChannelGroup(out var ch);
+                _osuBus.setVolume(_bgVolume);
+                if (ch.hasHandle()) ch.setPitch(Time.timeScale);
+            }
+#endif
+        }
+
+        private void Awake() => Instance = this;
+
+        public void Initialize()
+        {
+            _bgBus = FMODUnity.RuntimeManager.GetBus("bus:/bg");
+            _osuBus = FMODUnity.RuntimeManager.GetBus("bus:/osu");
+            _sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/sfx");
+            _voiceBus = FMODUnity.RuntimeManager.GetBus("bus:/voice");
             
-            _bgVolume = 1f;
-            _sfxVolume = 0.75f;
+            BgVolume = PlayerPrefs.GetFloat("bg", 1f);
+            SfxVolume = PlayerPrefs.GetFloat("sfx", 0.75f);
 
             MusicLoop = new MusicLoop();
             MusicLoop.Initialize();
