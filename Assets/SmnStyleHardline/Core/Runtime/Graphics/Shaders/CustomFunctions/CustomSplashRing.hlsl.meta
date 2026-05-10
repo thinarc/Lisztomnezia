@@ -9,6 +9,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 359042
   packageName: 'SummonStyle: Hardline - Illustrative, Comic Style Control System'
-  packageVersion: 1.1.0
+  packageVersion: 1.1.1
   assetPath: Assets/SmnStyleHardline/Core/Runtime/Graphics/Shaders/CustomFunctions/CustomSplashRing.hlsl
-  uploadId: 868588
+  uploadId: 912842

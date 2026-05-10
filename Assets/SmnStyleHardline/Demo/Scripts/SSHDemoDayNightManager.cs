@@ -103,15 +103,28 @@ namespace SmnStyleHardline.Demo
         {
             if (!enableSystem)
                 return;
-                
+
             frameCounter = 0;
             ApplyIfChanged(force: true);
         }
 
+#if UNITY_EDITOR
+
+        void OnEnable()
+        {
+            if (!enableSystem)
+                return;
+
+            frameCounter = 0;
+            ApplyIfChanged(force: true);
+        }
+
+#endif
+
         // ======================================================================
         // Public API
         // ======================================================================
-        
+
         public void SetSystemEnabled(bool enabled)
         {
             enableSystem = enabled;

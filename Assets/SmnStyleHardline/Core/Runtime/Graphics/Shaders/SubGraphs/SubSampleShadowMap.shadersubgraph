@@ -137,6 +137,9 @@
         },
         {
             "m_Id": "0a61e19aee814b2ca72832278267d69c"
+        },
+        {
+            "m_Id": "2e19073acbb14ef89ab51b306bae5c14"
         }
     ],
     "m_GroupDatas": [
@@ -198,6 +201,20 @@
                     "m_Id": "ed6532412ab042cba177e0eac6edfe12"
                 },
                 "m_SlotId": 4
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "2e19073acbb14ef89ab51b306bae5c14"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "9e3b33d5f6da486eb2133f8510af811e"
+                },
+                "m_SlotId": 3
             }
         },
         {
@@ -560,8 +577,8 @@
     "m_ObjectId": "014fd7e05bab44d79c3a28b8eb406ed0",
     "m_Title": "Mask - Directional Light Shadows",
     "m_Position": {
-        "x": -1446.999755859375,
-        "y": -294.9998779296875
+        "x": -1508.0001220703125,
+        "y": -295.00006103515627
     }
 }
 
@@ -749,8 +766,8 @@
     "m_ObjectId": "1075619e47e545fb92c1b5b48043a21a",
     "m_Title": "Mask - Additional Light",
     "m_Position": {
-        "x": -1446.999755859375,
-        "y": -895.0
+        "x": -1447.0,
+        "y": -895.0000610351563
     }
 }
 
@@ -919,8 +936,8 @@
     "m_ObjectId": "1e14a509b3764deb8cf9aa4f2d045e6d",
     "m_Title": "Blend - Color + Shadow",
     "m_Position": {
-        "x": -142.00003051757813,
-        "y": -568.9998779296875
+        "x": -141.9999237060547,
+        "y": -569.0
     }
 }
 
@@ -1105,6 +1122,43 @@
     "m_DefaultValue": 0.0,
     "m_Labels": [],
     "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.PositionNode",
+    "m_ObjectId": "2e19073acbb14ef89ab51b306bae5c14",
+    "m_Group": {
+        "m_Id": "014fd7e05bab44d79c3a28b8eb406ed0"
+    },
+    "m_Name": "Position",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -1483.0001220703125,
+            "y": -94.00004577636719,
+            "width": 206.0,
+            "height": 130.00003051757813
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "59f26362d13e4e5581a601d95ca16b49"
+        }
+    ],
+    "synonyms": [
+        "location"
+    ],
+    "m_Precision": 1,
+    "m_PreviewExpanded": false,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 2,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Space": 2,
+    "m_PositionSource": 0
 }
 
 {
@@ -1321,6 +1375,29 @@
 }
 
 {
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
+    "m_ObjectId": "59f26362d13e4e5581a601d95ca16b49",
+    "m_Id": 0,
+    "m_DisplayName": "Out",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_Labels": []
+}
+
+{
     "m_SGVersion": 1,
     "m_Type": "UnityEditor.ShaderGraph.Internal.Vector4ShaderProperty",
     "m_ObjectId": "5b53eaaf6a2b4fdcbaa0e45434a6da20",
@@ -1359,8 +1436,8 @@
     "m_ObjectId": "5fbe6c2fb6f54f15ba7c636385d1b044",
     "m_Title": "Shadow - Color",
     "m_Position": {
-        "x": -716.9998779296875,
-        "y": -629.9998168945313
+        "x": -716.9999389648438,
+        "y": -630.0
     }
 }
 
@@ -1420,8 +1497,8 @@
     "m_ObjectId": "6a1471088e094953bfe86f6eb1d965c5",
     "m_Title": "Mask - Shadows",
     "m_Position": {
-        "x": -787.999755859375,
-        "y": -294.9998779296875
+        "x": -787.9998779296875,
+        "y": -295.0000305175781
     }
 }
 
@@ -2451,6 +2528,9 @@
             "m_Id": "a6d7b22ffc5c4a5cbefe164b2c5045b1"
         },
         {
+            "m_Id": "b047ee41fe03499d9363bda43b6cb898"
+        },
+        {
             "m_Id": "0b1d47a47c5547e8ae696c316c261390"
         },
         {
@@ -2686,6 +2766,31 @@
         "w": 0.0
     },
     "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector4MaterialSlot",
+    "m_ObjectId": "b047ee41fe03499d9363bda43b6cb898",
+    "m_Id": 3,
+    "m_DisplayName": "PositionCS_1",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "PositionCS_1",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_Labels": []
 }
 
 {
