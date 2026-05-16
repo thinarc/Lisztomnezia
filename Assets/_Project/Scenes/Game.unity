@@ -14,9 +14,9 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 0.36862746, g: 0.40784314, b: 0.3882353, a: 1}
-  m_FogMode: 2
+  m_FogMode: 3
   m_FogDensity: 0.018
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
@@ -10112,7 +10112,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
