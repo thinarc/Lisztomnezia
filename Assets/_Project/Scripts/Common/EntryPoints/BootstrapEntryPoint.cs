@@ -32,11 +32,11 @@ namespace _Project.Scripts.Common.EntryPoints
 
             OsuContainer.Initialized = false;
             
-            // OutlineMover.Initialize(3f);
-            // SceneManager.LoadScene(1);
+            OutlineMover.Initialize(3f);
+            SceneManager.LoadScene(1);
             
-            OutlineMover.Initialize(0.11f);
-            SceneManager.LoadScene(2);
+            // OutlineMover.Initialize(0.11f);
+            // SceneManager.LoadScene(2);
         }
 
         private void OnDisable() => OutlineMover.OnDisable();
