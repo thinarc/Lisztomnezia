@@ -25,8 +25,10 @@ namespace _Project.Scripts.HUD
         
         public async UniTask CheckOptions()
         {
+            await UniTask.Delay(2000);
+            
             logo.DOFade(0, 0.2f).SetEase(Ease.OutExpo);
-            _authors.ForEach(a => a.DOLocalMoveZ(-20f, 0.6f).SetEase(Ease.OutExpo));
+            _authors.ForEach(a => a.DOLocalMoveZ(-21f, 0.4f).SetEase(Ease.OutExpo));
             
             await _group.DOFade(1, 0.4f).SetEase(Ease.InOutSine).AsyncWaitForCompletion();
             _group.interactable = true;
