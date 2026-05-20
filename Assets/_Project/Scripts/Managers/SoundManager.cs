@@ -28,6 +28,7 @@ namespace _Project.Scripts.Managers
                 _bgVolume = value;
                 _bgBus.setVolume(_bgVolume);
                 _osuBus.setVolume(_bgVolume);
+                PlayerPrefs.SetFloat("bg", _bgVolume);
             }
         }
         
@@ -42,6 +43,7 @@ namespace _Project.Scripts.Managers
                 _sfxVolume = value;
                 _sfxBus.setVolume(_sfxVolume);
                 _voiceBus.setVolume(_sfxVolume);
+                PlayerPrefs.SetFloat("sfx", _sfxVolume);
             }
         }
 

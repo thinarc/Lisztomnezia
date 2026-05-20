@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 52488754}
   - component: {fileID: 52488755}
+  - component: {fileID: 52488756}
   m_Layer: 5
   m_Name: Bg
   m_TagString: Untagged
@@ -143,7 +144,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 52488753}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -152,11 +153,11 @@ RectTransform:
   - {fileID: 1590916417}
   - {fileID: 1423892155}
   - {fileID: 1698224586}
-  m_Father: {fileID: 180973913}
+  m_Father: {fileID: 1634783507}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 200}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 376, y: -20}
   m_SizeDelta: {x: 752, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &52488755
@@ -209,7 +210,38 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 193847429}
+        m_TargetAssemblyTypeName: _Project.Scripts.HUD.StartOptions, Assembly-CSharp
+        m_MethodName: OnBackgroundChanged
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &52488756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52488753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e04b54bc09a48a68e6db7791ba8a491, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UITiltR
+  target: {fileID: 0}
+  tilt: 5
+  tiltRot: 10
+  chto: 1
+  chtoRaw: []
+  chtoDir: {x: 0, y: 0}
+  chtoSpeed: 0
 --- !u!1 &54173421
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,7 +472,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -4.9999695, y: 0}
+  m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &180973912
@@ -455,6 +487,7 @@ GameObject:
   - component: {fileID: 180973914}
   - component: {fileID: 180973916}
   - component: {fileID: 180973915}
+  - component: {fileID: 180973917}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -474,9 +507,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1634783507}
   - {fileID: 566830746}
-  - {fileID: 52488754}
-  - {fileID: 1186807850}
   m_Father: {fileID: 193847428}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -534,6 +566,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 180973912}
   m_CullTransparentMesh: 1
+--- !u!114 &180973917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180973912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e04b54bc09a48a68e6db7791ba8a491, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UITiltR
+  target: {fileID: 0}
+  tilt: 10
+  tiltRot: 10
+  chto: 0
+  chtoRaw: []
+  chtoDir: {x: 0, y: 0}
+  chtoSpeed: 0
 --- !u!1 &181431827
 GameObject:
   m_ObjectHideFlags: 0
@@ -726,6 +777,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.HUD.StartOptions
   logo: {fileID: 2045362082}
   authorsParent: {fileID: 1369072215}
+  bgSlider: {fileID: 52488755}
+  sfxSlider: {fileID: 1186807851}
+  locale: {fileID: 566830747}
 --- !u!1 &221730854
 GameObject:
   m_ObjectHideFlags: 0
@@ -2662,6 +2716,7 @@ GameObject:
   - component: {fileID: 566830749}
   - component: {fileID: 566830748}
   - component: {fileID: 566830747}
+  - component: {fileID: 566830750}
   m_Layer: 5
   m_Name: Dropdown
   m_TagString: Untagged
@@ -2686,9 +2741,9 @@ RectTransform:
   - {fileID: 2108516491}
   m_Father: {fileID: 180973913}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -300}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 960, y: -885}
   m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &566830747
@@ -2750,7 +2805,19 @@ MonoBehaviour:
       m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 193847429}
+        m_TargetAssemblyTypeName: _Project.Scripts.HUD.StartOptions, Assembly-CSharp
+        m_MethodName: OnLocaleChanged
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &566830748
 MonoBehaviour:
@@ -2790,6 +2857,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566830745}
   m_CullTransparentMesh: 1
+--- !u!114 &566830750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566830745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e04b54bc09a48a68e6db7791ba8a491, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UITiltR
+  target: {fileID: 0}
+  tilt: -10
+  tiltRot: 10
+  chto: 1
+  chtoRaw: []
+  chtoDir: {x: 0, y: 0}
+  chtoSpeed: 0
 --- !u!1 &671132518
 GameObject:
   m_ObjectHideFlags: 0
@@ -3637,6 +3723,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1186807850}
   - component: {fileID: 1186807851}
+  - component: {fileID: 1186807852}
   m_Layer: 5
   m_Name: Sfx
   m_TagString: Untagged
@@ -3651,7 +3738,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1186807849}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3660,11 +3747,11 @@ RectTransform:
   - {fileID: 168733576}
   - {fileID: 2104130111}
   - {fileID: 1203851287}
-  m_Father: {fileID: 180973913}
+  m_Father: {fileID: 1634783507}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 376, y: -140}
   m_SizeDelta: {x: 552, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1186807851
@@ -3717,7 +3804,38 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 193847429}
+        m_TargetAssemblyTypeName: _Project.Scripts.HUD.StartOptions, Assembly-CSharp
+        m_MethodName: OnSfxChanged
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1186807852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186807849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e04b54bc09a48a68e6db7791ba8a491, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UITiltR
+  target: {fileID: 0}
+  tilt: 10
+  tiltRot: 10
+  chto: 1
+  chtoRaw: []
+  chtoDir: {x: 0, y: 0}
+  chtoSpeed: 0
 --- !u!1 &1191314065
 GameObject:
   m_ObjectHideFlags: 0
@@ -4986,6 +5104,63 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1634783506
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1634783507}
+  - component: {fileID: 1634783508}
+  m_Layer: 5
+  m_Name: Slide
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1634783507
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634783506}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 52488754}
+  - {fileID: 1186807850}
+  m_Father: {fileID: 180973913}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 960, y: -545}
+  m_SizeDelta: {x: 752, y: 160}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1634783508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634783506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e04b54bc09a48a68e6db7791ba8a491, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UITiltR
+  target: {fileID: 0}
+  tilt: 20
+  tiltRot: 10
+  chto: 0
+  chtoRaw: []
+  chtoDir: {x: 0, y: 0}
+  chtoSpeed: 0
 --- !u!1 &1698224585
 GameObject:
   m_ObjectHideFlags: 0
