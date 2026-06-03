@@ -10,6 +10,8 @@ namespace _Project.Scripts.Common.EntryPoints
 {
     public class LogoEntryPoint : MonoBehaviour
     {
+        public static StartOptions StartOptions { get; private set; }
+        
         [SerializeField] private StartOptions startOptions;
         
         public TextMeshProUGUI xClick;
@@ -28,6 +30,7 @@ namespace _Project.Scripts.Common.EntryPoints
             // xClick.text = "(0x)";
             
             Cursor.visible = true;
+            StartOptions = startOptions;
             
             await startOptions.CheckOptions();
             DontDestroyOnLoad(this);

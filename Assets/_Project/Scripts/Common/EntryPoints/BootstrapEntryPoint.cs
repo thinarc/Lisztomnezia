@@ -25,6 +25,7 @@ namespace _Project.Scripts.Common.EntryPoints
             
             PlayerPrefs.SetFloat("bg", 1f);
             PlayerPrefs.SetFloat("sfx", 0.75f);
+            PlayerPrefs.SetFloat("voice", 0.6f);
             SoundManager.Instance.Initialize();
             
             Instance = this;

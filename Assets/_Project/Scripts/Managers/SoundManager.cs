@@ -42,8 +42,21 @@ namespace _Project.Scripts.Managers
                 if (value is > 1f or < 0) return;
                 _sfxVolume = value;
                 _sfxBus.setVolume(_sfxVolume);
-                _voiceBus.setVolume(_sfxVolume);
                 PlayerPrefs.SetFloat("sfx", _sfxVolume);
+            }
+        }
+        
+        private float _voiceVolume;
+        
+        public float VoiceVolume
+        {
+            get => _voiceVolume;
+            set
+            {
+                if (value is > 1f or < 0) return;
+                _voiceVolume = value;
+                _voiceBus.setVolume(_voiceVolume);
+                PlayerPrefs.SetFloat("voice", _voiceVolume);
             }
         }
 
@@ -78,6 +91,7 @@ namespace _Project.Scripts.Managers
             
             BgVolume = PlayerPrefs.GetFloat("bg", 1f);
             SfxVolume = PlayerPrefs.GetFloat("sfx", 0.75f);
+            VoiceVolume = PlayerPrefs.GetFloat("voice", 0.6f);
 
             MusicLoop = new MusicLoop();
             MusicLoop.Initialize();
