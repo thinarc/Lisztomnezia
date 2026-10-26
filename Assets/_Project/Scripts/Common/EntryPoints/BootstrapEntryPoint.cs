@@ -5,7 +5,9 @@ using Cysharp.Threading.Tasks;
 using SmnStyleHardline.Core;
 using TMPEffects.Components;
 using TMPro;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
@@ -15,6 +17,8 @@ namespace _Project.Scripts.Common.EntryPoints
     public class BootstrapEntryPoint : MonoBehaviour
     {
         public static BootstrapEntryPoint Instance { get; private set; }
+
+        private void Awake() => SetEscapeText("");
         
         private void Start()
         {
@@ -34,60 +38,160 @@ namespace _Project.Scripts.Common.EntryPoints
             OsuContainer.Initialized = false;
             
             OutlineMover.Initialize(3f);
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(1, new LoadSceneParameters(LoadSceneMode.Single, LocalPhysicsMode.Physics3D));
             
             // OutlineMover.Initialize(0.11f);
             // SceneManager.LoadScene(2);
         }
 
-        private void OnDisable() => OutlineMover.OnDisable();
+        public static bool IsPaused => Instance != null && Instance._paused;
 
         public TextMeshProUGUI escText;
-        private float _esc = 2f;
-        private bool waitDel;
+        private bool _paused;
+        private bool _closeOnRelease;
+        private bool _quitting;
+        private float _heldEscape;
+        private float _previousTimeScale;
+        private bool _previousCursorVisible;
+        private CursorLockMode _previousCursorLock;
+        private readonly string[] _busPaths = { "bus:/bg", "bus:/osu", "bus:/sfx", "bus:/voice" };
+        private readonly FMOD.Studio.Bus[] _pausedBuses = new FMOD.Studio.Bus[4];
+        private readonly bool[] _previousBusPaused = new bool[4];
+        private bool _previousAudioPaused;
+        private bool _pauseTransitionRunning;
+        private bool _requestedPaused;
 
-        private async void Update()
+        private void Update()
         {
-            if (Input.GetKey(KeyCode.Escape)) _esc -= Time.deltaTime;
-            else if (_esc < 2f) _esc += Time.deltaTime * 4;
-            
-            if (_esc < 2f && escText.text != ">>>")
+            HandleEscape(Input.GetKeyDown(KeyCode.Escape), Input.GetKey(KeyCode.Escape),
+                Input.GetKeyUp(KeyCode.Escape), Time.unscaledDeltaTime);
+        }
+
+        private void HandleEscape(bool pressed, bool held, bool released, float deltaTime)
+        {
+            if (_quitting) return;
+            if (LogoEntryPoint.Instance != null && LogoEntryPoint.Instance.IsStartingGame)
             {
-                escText.text = ">>>";
-                escText.GetComponent<TMPWriter>().enabled = false;
+                SetEscapeText("");
+                return;
+            }
+            var options = LogoEntryPoint.StartOptions;
+            var sceneIndex = SceneManager.GetActiveScene().buildIndex;
+            var canPause = sceneIndex == 1 || sceneIndex == 2;
+
+            if (pressed)
+            {
+                _closeOnRelease = _paused;
+                _heldEscape = 0;
+                if (!_paused && canPause && options != null) SetPaused(true);
             }
 
-            if (_esc < 1.65f && escText.text != ">>") escText.text = ">>";
-
-            if (_esc < 0f && escText.text != ">" && !waitDel)
+            if (held && _paused)
             {
-                if (SceneManager.GetActiveScene().buildIndex == 2)
+                _heldEscape += deltaTime;
+                SetEscapeText(_heldEscape < 0.35f ? "" : _heldEscape < 0.9f ? "<<<" : _heldEscape < 2f ? "<<" : "<");
+                if (_heldEscape >= 2f) QuitGame().Forget();
+            }
+            else SetEscapeText("");
+
+            if (released)
+            {
+                // The opening tap leaves the menu open; releasing the next press resumes.
+                if (_closeOnRelease) SetPaused(false);
+                _closeOnRelease = false;
+                _heldEscape = 0;
+                SetEscapeText("");
+            }
+        }
+
+        private void SetEscapeText(string text)
+        {
+            if (escText == null) return;
+            var writer = escText.GetComponent<TMPWriter>();
+            if (writer != null) writer.enabled = false;
+            escText.text = text;
+            escText.enabled = text.Length > 0;
+        }
+
+        public void SetPaused(bool paused)
+        {
+            _requestedPaused = paused;
+            if (!_pauseTransitionRunning) TransitionPause().Forget();
+        }
+
+        private async UniTask TransitionPause()
+        {
+            _pauseTransitionRunning = true;
+            try
+            {
+                // Serialize transitions; rapid Escape presses update the requested final state.
+                while (_requestedPaused != _paused)
                 {
-                    escText.text = ">";
-                    waitDel = true;
-                    await UniTask.Delay(200);
-                    SceneManager.LoadScene(1);
-                    waitDel = false;
-                    escText.text = "";
-                    _esc = 2f;
-                    return;
+                    var opening = _requestedPaused;
+                    if (opening) ApplyGameplayPause(true);
+                    if (LogoEntryPoint.Instance != null)
+                        await LogoEntryPoint.Instance.TransitionPause(opening);
+                    else if (LogoEntryPoint.StartOptions != null)
+                        LogoEntryPoint.StartOptions.SetVisible(opening);
+                    if (this == null || !isActiveAndEnabled) return;
+                    if (!opening) ApplyGameplayPause(false);
                 }
-                
-                escText.text = ">";
-                await UniTask.Delay(200);
-                waitDel = true;
-                Application.Quit();
-                escText.text = "<<";
-#if UNITY_EDITOR
-                EditorApplication.isPlaying = false;
-#endif
             }
-
-            if (_esc >= 2f && escText.text != "")
+            finally
             {
-                escText.text = "";
-                escText.GetComponent<TMPWriter>().enabled = true;
+                _pauseTransitionRunning = false;
             }
+        }
+
+        private void ApplyGameplayPause(bool paused)
+        {
+            if (_paused == paused) return;
+            if (paused)
+            {
+                _previousTimeScale = Time.timeScale;
+                _previousCursorVisible = Cursor.visible;
+                _previousCursorLock = Cursor.lockState;
+                _previousAudioPaused = AudioListener.pause;
+                // Leave the master bus to FMOD's application-focus pause handling.
+                for (var i = 0; i < _busPaths.Length; i++)
+                {
+                    _pausedBuses[i] = FMODUnity.RuntimeManager.GetBus(_busPaths[i]);
+                    _pausedBuses[i].getPaused(out _previousBusPaused[i]);
+                    _pausedBuses[i].setPaused(true);
+                }
+                _paused = true;
+                Time.timeScale = 0;
+                AudioListener.pause = true;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                _paused = false;
+                Time.timeScale = _previousTimeScale;
+                AudioListener.pause = _previousAudioPaused;
+                for (var i = 0; i < _pausedBuses.Length; i++)
+                    if (_pausedBuses[i].isValid()) _pausedBuses[i].setPaused(_previousBusPaused[i]);
+                Cursor.lockState = _previousCursorLock;
+                Cursor.visible = _previousCursorVisible;
+            }
+        }
+
+        private async UniTask QuitGame()
+        {
+            _quitting = true;
+            await UniTask.Delay(200, ignoreTimeScale: true);
+            Application.Quit();
+#if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+#endif
+        }
+
+        private void OnDisable()
+        {
+            _requestedPaused = false;
+            if (_paused) ApplyGameplayPause(false);
+            OutlineMover.OnDisable();
         }
     }
 }

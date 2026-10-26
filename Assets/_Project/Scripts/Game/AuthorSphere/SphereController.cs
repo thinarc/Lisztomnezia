@@ -39,6 +39,18 @@ public class SphereController : MonoBehaviour
     private float releaseTimer = 0f;
 
     private Camera cam;
+    private bool manualMenuPhysics;
+
+    public void UseMenuPhysics(Camera menuCamera)
+    {
+        manualMenuPhysics = true;
+        cam = menuCamera;
+    }
+
+    public void StepMenuPhysics(float deltaTime)
+    {
+        if (rb != null) StepMovement(deltaTime);
+    }
     
     private TextMeshPro bigTMP;
 
@@ -54,7 +66,7 @@ public class SphereController : MonoBehaviour
         rb.useGravity = false;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
 
-        cam = Camera.main;
+        if (!manualMenuPhysics) cam = Camera.main;
 
         if (!isBigSphere)
             PickNewDirection();
@@ -68,7 +80,7 @@ public class SphereController : MonoBehaviour
             scaleText /= 1.12f;
             scaleText /= 1.12f;
             scaleText /= 1.12f;
-            GetComponentInChildren<TextMeshPro>().transform.DOScale(Vector2.zero, 0f).SetEase(Ease.InExpo);
+            GetComponentInChildren<TextMeshPro>().transform.DOScale(Vector2.zero, 0f).SetEase(Ease.InExpo).SetUpdate(manualMenuPhysics);
             
             bigTMP = GetComponentInChildren<TextMeshPro>();
             accumulatedColor = bigTMP.color;
@@ -79,13 +91,18 @@ public class SphereController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!manualMenuPhysics) StepMovement(Time.fixedDeltaTime);
+    }
+
+    private void StepMovement(float deltaTime)
+    {
         if (isBigSphere)
         {
             BigSphereMovement();
         }
         else
         {
-            SmallSphereMovement();
+            SmallSphereMovement(deltaTime);
         }
 
         ClampPosition();
@@ -108,11 +125,11 @@ public class SphereController : MonoBehaviour
     }
 
     // --- SMALL ---
-    async void SmallSphereMovement()
+    async void SmallSphereMovement(float deltaTime)
     {
         if (bigSphere == null) return;
 
-        timer += Time.fixedDeltaTime;
+        timer += deltaTime;
 
         if (timer >= changeDirTime)
         {
@@ -129,7 +146,7 @@ public class SphereController : MonoBehaviour
         // --- режим отпускания ---
         if (isReleasing)
         {
-            releaseTimer -= Time.fixedDeltaTime;
+            releaseTimer -= deltaTime;
 
             move = -toBig * releaseForce;
 
@@ -155,7 +172,7 @@ public class SphereController : MonoBehaviour
         // --- проверка "захвата" ---
         if (distance < releaseDistance)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(releaseTime * 2));
+            await UniTask.Delay(TimeSpan.FromSeconds(releaseTime * 2), ignoreTimeScale: manualMenuPhysics);
             if (distance > releaseDistance) return;
             
             isReleasing = true;
@@ -183,7 +200,7 @@ public class SphereController : MonoBehaviour
 
         while (t < 1f)
         {
-            t += Time.deltaTime / time;
+            t += (manualMenuPhysics ? Time.unscaledDeltaTime : Time.deltaTime) / time;
             tmp.color = Color.Lerp(start, target, t);
             await UniTask.Yield();
         }
@@ -306,12 +323,12 @@ public class SphereController : MonoBehaviour
             AddColor(otherTMP.color);
         }
         
-        other.transform.DOScale(8, 0.4f).SetEase(Ease.OutExpo);
+        other.transform.DOScale(8, 0.4f).SetEase(Ease.OutExpo).SetUpdate(manualMenuPhysics);
         scale *= 1.12f;
         scaleText *= 1.12f;
-        transform.DOScale(scale, 0.4f).SetEase(Ease.OutExpo);
-        ppp[0].transform.DOScale(scaleText, 0.4f).SetEase(Ease.OutExpo);
-        ppp[1].transform.DOScale(scaleText, 0.4f).SetEase(Ease.OutExpo);
+        transform.DOScale(scale, 0.4f).SetEase(Ease.OutExpo).SetUpdate(manualMenuPhysics);
+        ppp[0].transform.DOScale(scaleText, 0.4f).SetEase(Ease.OutExpo).SetUpdate(manualMenuPhysics);
+        ppp[1].transform.DOScale(scaleText, 0.4f).SetEase(Ease.OutExpo).SetUpdate(manualMenuPhysics);
     }
 
     public TextMeshPro[] ppp;
@@ -339,12 +356,12 @@ public class SphereController : MonoBehaviour
             RemoveColor(otherTMP.color);
         }
         
-        other.transform.DOScale(12, 0.4f).SetEase(Ease.InExpo);
+        other.transform.DOScale(12, 0.4f).SetEase(Ease.InExpo).SetUpdate(manualMenuPhysics);
         scale /= 1.1f;
         scaleText /= 1.12f;
-        transform.DOScale(scale, 0.6f).SetEase(Ease.InExpo);
-        ppp[0].transform.DOScale(Vector2.zero, 0.4f).SetEase(Ease.InExpo);
-        ppp[1].transform.DOScale(Vector2.zero, 0.4f).SetEase(Ease.InExpo);
+        transform.DOScale(scale, 0.6f).SetEase(Ease.InExpo).SetUpdate(manualMenuPhysics);
+        ppp[0].transform.DOScale(Vector2.zero, 0.4f).SetEase(Ease.InExpo).SetUpdate(manualMenuPhysics);
+        ppp[1].transform.DOScale(Vector2.zero, 0.4f).SetEase(Ease.InExpo).SetUpdate(manualMenuPhysics);
     }
 
     private Vector3 scale;

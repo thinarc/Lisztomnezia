@@ -43,6 +43,8 @@ namespace _Project.Scripts.Diary
         
         private void Update()
         {
+            if (_Project.Scripts.Common.EntryPoints.BootstrapEntryPoint.IsPaused) return;
+
             if (Input.GetKeyDown(KeyCode.W)) _anim.SetBool("Walk", true);
             else if (Input.GetKeyUp(KeyCode.W)) _anim.SetBool("Walk", false);
             

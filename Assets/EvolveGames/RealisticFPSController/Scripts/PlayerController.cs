@@ -87,6 +87,8 @@ namespace EvolveGames
 
         void Update()
         {
+            if (_Project.Scripts.Common.EntryPoints.BootstrapEntryPoint.IsPaused) return;
+
             RaycastHit CroughCheck;
             RaycastHit ObjectCheck;
 

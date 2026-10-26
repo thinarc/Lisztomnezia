@@ -38,7 +38,7 @@ namespace _Project.Scripts.osu_.Hit
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (!_tailed) return;
+            if (_Project.Scripts.Common.EntryPoints.BootstrapEntryPoint.IsPaused || !_tailed) return;
             _dropped = true;
         }
         
@@ -81,7 +81,7 @@ namespace _Project.Scripts.osu_.Hit
 
         public void Click()
         {
-            if (!_run) return;
+            if (_Project.Scripts.Common.EntryPoints.BootstrapEntryPoint.IsPaused || !_run) return;
 
             var meh = false;
             

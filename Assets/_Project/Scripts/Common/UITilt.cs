@@ -34,21 +34,23 @@ public class UITilt : MonoBehaviour
     void Update()
     {
         if (chtoRaw.Length == 0) return;
+
+        var animationTime = gameObject.scene.buildIndex == 1 ? Time.unscaledTime : Time.time;
         
         Rect raw = chtoRaw[0].uvRect;
-        raw.position = new Vector2(chtoDir.x * chtoSpeed * Time.time, chtoDir.y * chtoSpeed * Time.time);
+        raw.position = new Vector2(chtoDir.x * chtoSpeed * animationTime, chtoDir.y * chtoSpeed * animationTime);
         chtoRaw[0].uvRect = raw;
         
         Rect raw2 = chtoRaw[1].uvRect;
-        raw2.position = new Vector2(chtoDir.x * chtoSpeed * Time.time, chtoDir.y * chtoSpeed * Time.time);
+        raw2.position = new Vector2(chtoDir.x * chtoSpeed * animationTime, chtoDir.y * chtoSpeed * animationTime);
         chtoRaw[1].uvRect = raw2;
         
         Rect raw3 = chtoRaw[2].uvRect;
-        raw3.position = new Vector2(chtoDir.x * chtoSpeed * Time.time, chtoDir.y * chtoSpeed * Time.time);
+        raw3.position = new Vector2(chtoDir.x * chtoSpeed * animationTime, chtoDir.y * chtoSpeed * animationTime);
         chtoRaw[2].uvRect = raw3;
         
         Rect raw4 = chtoRaw[3].uvRect;
-        raw4.position = new Vector2(chtoDir.x * chtoSpeed * Time.time, chtoDir.y * chtoSpeed * Time.time);
+        raw4.position = new Vector2(chtoDir.x * chtoSpeed * animationTime, chtoDir.y * chtoSpeed * animationTime);
         chtoRaw[3].uvRect = raw4;
         
         // if (target == null) Start();

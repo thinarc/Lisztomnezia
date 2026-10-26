@@ -14,6 +14,8 @@ namespace _Project.Scripts.osu_
         
         private void Update()
         {
+            if (_Project.Scripts.Common.EntryPoints.BootstrapEntryPoint.IsPaused) return;
+
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 canvas.transform as RectTransform,
                 Input.mousePosition,

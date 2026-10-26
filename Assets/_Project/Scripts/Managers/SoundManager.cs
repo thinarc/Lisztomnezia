@@ -62,6 +62,8 @@ namespace _Project.Scripts.Managers
 
         private void Update()
         {
+            if (_Project.Scripts.Common.EntryPoints.BootstrapEntryPoint.IsPaused) return;
+
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             if (Input.GetKeyDown(KeyCode.K))
             {

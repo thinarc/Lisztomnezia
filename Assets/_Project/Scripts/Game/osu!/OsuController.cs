@@ -146,6 +146,7 @@ namespace _Project.Scripts.osu_
 
             while (true)
             {
+                await UniTask.WaitUntil(() => !_Project.Scripts.Common.EntryPoints.BootstrapEntryPoint.IsPaused);
                 if (_fail)
                 {
                     SoundManager.Instance.OsuCase.StopLevel();
@@ -186,6 +187,7 @@ namespace _Project.Scripts.osu_
                     var res = false;
                     while (true)
                     {
+                        await UniTask.WaitUntil(() => !_Project.Scripts.Common.EntryPoints.BootstrapEntryPoint.IsPaused);
                         if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Mouse0))
                         {
                             power += Time.deltaTime * 0.5f * 0.75f;
@@ -355,6 +357,8 @@ namespace _Project.Scripts.osu_
         
         private void Update()
         {
+            if (_Project.Scripts.Common.EntryPoints.BootstrapEntryPoint.IsPaused) return;
+
             var desc = SoundManager.Instance.OsuCase.GetDesc();
             lenghtSlider.value = desc[0];
             lenghtNowText.text = FormatTime((int)desc[0]).ToString(CultureInfo.CurrentCulture);

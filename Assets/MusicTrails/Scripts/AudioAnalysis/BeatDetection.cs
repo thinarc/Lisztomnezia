@@ -176,7 +176,7 @@ public class BeatDetection : MonoBehaviour
 
     private IEnumerator NotifyOnBeat(SpectralFluxData spectralFluxData)
     {
-        yield return new WaitForSecondsRealtime(spectralFluxData.time + GameManager.Instance.Delay - Time.time);
+        yield return new WaitForSeconds(Mathf.Max(0f, spectralFluxData.time + GameManager.Instance.Delay - Time.time));
         OnBeat?.Invoke();
     }
 
