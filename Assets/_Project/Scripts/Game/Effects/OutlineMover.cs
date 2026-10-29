@@ -16,7 +16,8 @@ namespace _Project.Scripts.Effects
             HorrorFlash = 6,
             OnOsu = 7,
             SlowPressure = 8,
-            ChaosEvent = 9
+            ChaosEvent = 9,
+            RabbitCatch = 10
         }
 
         public enum ColorMode
@@ -38,61 +39,83 @@ namespace _Project.Scripts.Effects
 
         static OutlineScenario _scenario = OutlineScenario.Idle;
 
-        static ColorMode _colorMode = ColorMode.Base; 
+        static ColorMode _colorMode = ColorMode.Base;
         static ColorBreath _colorBreath = ColorBreath.None;
 
         static float _baseStrength;
         static float _currentStrength;
 
+        static float _worldRecovery = 1f;
         static bool _disable;
+        static bool _running;
+        static bool _sketchActive;
+        static int _scenarioVersion;
 
         static Color baseColor = new Color32(8,9,12,255);
-        static Color warmColor = new Color(0.6f,0.3f,0.2f);
-        static Color coldColor = new Color(0.3f,0.45f,0.7f);
-        static Color horrorColor = new Color(0.4f,0.05f,0.05f);
-        static Color dreamColor = new Color(0.35f,0.2f,0.5f);
+        static Color _currentColor = baseColor;
+        static Color warmColor = new Color32(43, 40, 37, 255);
+        static Color coldColor = new Color32(36, 40, 45, 255);
+        static Color horrorColor = new Color32(100, 22, 25, 255);
+        static Color dreamColor = new Color32(41, 38, 45, 255);
 
         public static void Initialize(float strength)
         {
             _baseStrength = strength;
             _currentStrength = strength;
 
-            SSHStyleManager.API.Outline.SetColorOutlineStrength(strength);
+            SSHStyleManager.API.Outline.SetColorOutlineStrength(ToOutlineThreshold(strength));
             SSHStyleManager.API.Outline.SetColorOutlineColor(baseColor);
-            
-            _scenario = OutlineScenario.Idle;
-            _colorMode = ColorMode.Base; 
+
+            SetScenario(OutlineScenario.Idle);
+            _currentColor = baseColor;
+            _colorMode = ColorMode.Base;
             _colorBreath = ColorBreath.None;
 
             _disable = false;
 
-            Run().Forget();
+            if (!_running) Run().Forget();
         }
 
         static async UniTaskVoid Run()
         {
-            while(!_disable)
+            _running = true;
+            try
             {
-                HandleDevKeys();
-
-                switch(_scenario)
+                while(!_disable)
                 {
-                    case OutlineScenario.Idle: await Idle(); break;
-                    case OutlineScenario.CalmBreath: await CalmBreath(); break;
-                    case OutlineScenario.AmbientNoise: await AmbientNoise(); break;
-                    case OutlineScenario.BlinkEvent: await BlinkEvent(); break;
-                    case OutlineScenario.StressPulse: await StressPulse(); break;
-                    case OutlineScenario.HorrorFlash: await HorrorFlash(); break;
-                    case OutlineScenario.OnOsu: await OnOsu(); break;
-                    case OutlineScenario.SlowPressure: await SlowPressure(); break;
-                    case OutlineScenario.ChaosEvent: await ChaosEvent(); break;
+                    HandleDevKeys();
+
+                    switch(_scenario)
+                    {
+                        case OutlineScenario.RabbitCatch: await RabbitCatch(); break;
+                        case OutlineScenario.Idle: await Idle(); break;
+                        case OutlineScenario.CalmBreath: await CalmBreath(); break;
+                        case OutlineScenario.AmbientNoise: await AmbientNoise(); break;
+                        case OutlineScenario.BlinkEvent: await BlinkEvent(); break;
+                        case OutlineScenario.StressPulse: await StressPulse(); break;
+                        case OutlineScenario.HorrorFlash: await HorrorFlash(); break;
+                        case OutlineScenario.OnOsu: await OnOsu(); break;
+                        case OutlineScenario.SlowPressure: await SlowPressure(); break;
+                        case OutlineScenario.ChaosEvent: await ChaosEvent(); break;
+                    }
                 }
             }
+            finally { _running = false; }
+        }
+
+        // The shader uses Strength as a Step threshold: higher values cover less.
+        // Keep the old scenario rhythms, but confine broad flashes to a subtler range.
+        static float ToOutlineThreshold(float strength)
+        {
+            return strength < 1f
+                ? Mathf.Lerp(Mathf.Lerp(0.08f, 0.18f, _worldRecovery), 0.65f, Mathf.InverseLerp(-0.1f, 1f, strength))
+                : Mathf.Lerp(0.65f, 3f, Mathf.InverseLerp(1f, 3f, strength));
+
         }
 
         static void SetOutline(float strength)
         {
-            SSHStyleManager.API.Outline.SetColorOutlineStrength(strength);
+            SSHStyleManager.API.Outline.SetColorOutlineStrength(ToOutlineThreshold(strength));
             SSHStyleManager.API.Outline.SetColorOutlineColor(ApplyColor());
         }
 
@@ -112,27 +135,29 @@ namespace _Project.Scripts.Effects
 
             if(_colorBreath != ColorBreath.None)
             {
-                float power = (_colorBreath == ColorBreath.Soft) ? 0.02f :
-                              (_colorBreath == ColorBreath.Medium) ? 0.05f : 0.08f;
+                float power = (_colorBreath == ColorBreath.Soft) ? 0.004f :
+                              (_colorBreath == ColorBreath.Medium) ? 0.008f : 0.012f;
 
-                float t = Mathf.Sin(time * Random.Range(0.4f,0.9f)) * power;
+                float t = Mathf.Sin(time * 0.65f) * power;
 
                 c += new Color(t,t,t);
             }
 
-            float drift = Mathf.PerlinNoise(time * 0.1f, 42f) * 0.03f;
+            float drift = Mathf.PerlinNoise(time * 0.1f, 42f) * 0.004f;
             c.r += drift;
             c.g -= drift * 0.5f;
 
-            float noise = (Mathf.PerlinNoise(time * 6f, 99f) - 0.5f) * 0.02f;
+            float noise = (Mathf.PerlinNoise(time * 6f, 99f) - 0.5f) * 0.004f;
             c += new Color(noise,noise,noise);
 
-            return c;
+            _currentColor = Color.Lerp(_currentColor, c, 1f - Mathf.Exp(-Time.deltaTime * 8f));
+            return _currentColor;
         }
 
         static async UniTask Idle()
         {
-            _currentStrength = Mathf.Lerp(_currentStrength,_baseStrength,Time.deltaTime*2);
+            if (!_sketchActive)
+                _currentStrength = Mathf.Lerp(_currentStrength,_baseStrength,Time.deltaTime*2);
             SetOutline(_currentStrength);
             await UniTask.NextFrame();
         }
@@ -175,31 +200,38 @@ namespace _Project.Scripts.Effects
 
         static async UniTask BlinkEvent()
         {
+            var version = _scenarioVersion;
             SetOutline(Random.Range(0.02f,0.1f));
             await UniTask.Delay(Random.Range(40,90));
+            if (_disable || version != _scenarioVersion) return;
 
             SetOutline(Random.Range(0.4f,0.7f));
             await UniTask.Delay(Random.Range(80,140));
+            if (_disable || version != _scenarioVersion) return;
 
             _scenario = OutlineScenario.CalmBreath;
         }
 
         static async UniTask StressPulse()
         {
+            var version = _scenarioVersion;
             int count = Random.Range(3,7);
 
             for(int i=0;i<count;i++)
             {
                 SetOutline(Random.Range(-0.02f,0.15f));
                 await UniTask.Delay(Random.Range(40,120));
+                if (_disable || version != _scenarioVersion) return;
 
                 SetOutline(Random.Range(0.4f,0.7f));
                 await UniTask.Delay(Random.Range(80,180));
+                if (_disable || version != _scenarioVersion) return;
 
                 if(Random.value < 0.25f)
                 {
                     SetOutline(Random.Range(0.2f,0.5f));
                     await UniTask.Delay(Random.Range(30,90));
+                    if (_disable || version != _scenarioVersion) return;
                 }
             }
 
@@ -208,20 +240,54 @@ namespace _Project.Scripts.Effects
 
         static async UniTask HorrorFlash()
         {
+            var version = _scenarioVersion;
             int flashes = Random.Range(1,3);
 
             for(int i=0;i<flashes;i++)
             {
                 SetOutline(Random.Range(-0.08f,0.02f));
                 await UniTask.Delay(Random.Range(60,140));
+                if (_disable || version != _scenarioVersion) return;
 
                 SetOutline(Random.Range(0.05f,0.2f));
                 await UniTask.Delay(Random.Range(60,120));
+                if (_disable || version != _scenarioVersion) return;
             }
 
             _scenario = (Random.value < 0.3f)
                 ? OutlineScenario.ChaosEvent
                 : OutlineScenario.StressPulse;
+        }
+
+        public static void CatchRabbit()
+        {
+            SetScenario(OutlineScenario.RabbitCatch);
+            SetColor(ColorMode.Horror);
+            SetBreath(ColorBreath.None);
+            _currentColor = horrorColor;
+            // Apply immediately at the tear, even if a previous scenario is awaiting.
+            SetOutline(0.05f);
+        }
+
+        static async UniTask RabbitCatch()
+        {
+            var version = _scenarioVersion;
+            const float duration = 0.65f;
+            var elapsed = 0f;
+            while (elapsed < duration)
+            {
+                if (_disable || version != _scenarioVersion) return;
+                var fade = Mathf.SmoothStep(0f, 1f, elapsed / duration);
+                _currentColor = Color.Lerp(horrorColor, baseColor, fade);
+                SSHStyleManager.API.Outline.SetColorOutlineColor(_currentColor);
+                _currentStrength = Mathf.Lerp(0.05f, _baseStrength, fade);
+                SSHStyleManager.API.Outline.SetColorOutlineStrength(ToOutlineThreshold(_currentStrength));
+                await UniTask.NextFrame();
+                elapsed += Time.deltaTime;
+            }
+            if (_disable || version != _scenarioVersion) return;
+            SetColor(ColorMode.Base);
+            SetScenario(OutlineScenario.CalmBreath);
         }
 
         static async UniTask OnOsu()
@@ -255,6 +321,7 @@ namespace _Project.Scripts.Effects
 
         static async UniTask ChaosEvent()
         {
+            var version = _scenarioVersion;
             int count = Random.Range(5,10);
 
             for(int i=0;i<count;i++)
@@ -266,6 +333,7 @@ namespace _Project.Scripts.Effects
 
                 SetOutline(value);
                 await UniTask.Delay(Random.Range(30,150));
+                if (_disable || version != _scenarioVersion) return;
             }
 
             float r = Random.value;
@@ -278,27 +346,48 @@ namespace _Project.Scripts.Effects
         static void HandleDevKeys()
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            if(Input.GetKeyDown(KeyCode.Alpha1)) _scenario = OutlineScenario.Idle;
-            if(Input.GetKeyDown(KeyCode.Alpha2)) _scenario = OutlineScenario.CalmBreath;
-            if(Input.GetKeyDown(KeyCode.Alpha3)) _scenario = OutlineScenario.AmbientNoise;
-            if(Input.GetKeyDown(KeyCode.Alpha4)) _scenario = OutlineScenario.BlinkEvent;
-            if(Input.GetKeyDown(KeyCode.Alpha5)) _scenario = OutlineScenario.StressPulse;
-            if(Input.GetKeyDown(KeyCode.Alpha6)) _scenario = OutlineScenario.HorrorFlash;
-            if(Input.GetKeyDown(KeyCode.Alpha7)) _scenario = OutlineScenario.OnOsu;
-            if(Input.GetKeyDown(KeyCode.Alpha8)) _scenario = OutlineScenario.SlowPressure;
-            if(Input.GetKeyDown(KeyCode.Alpha9)) _scenario = OutlineScenario.ChaosEvent;
+            if(Input.GetKeyDown(KeyCode.Alpha1)) SetScenario(OutlineScenario.Idle);
+            if(Input.GetKeyDown(KeyCode.Alpha2)) SetScenario(OutlineScenario.CalmBreath);
+            if(Input.GetKeyDown(KeyCode.Alpha3)) SetScenario(OutlineScenario.AmbientNoise);
+            if(Input.GetKeyDown(KeyCode.Alpha4)) SetScenario(OutlineScenario.BlinkEvent);
+            if(Input.GetKeyDown(KeyCode.Alpha5)) SetScenario(OutlineScenario.StressPulse);
+            if(Input.GetKeyDown(KeyCode.Alpha6)) SetScenario(OutlineScenario.HorrorFlash);
+            if(Input.GetKeyDown(KeyCode.Alpha7)) SetScenario(OutlineScenario.OnOsu);
+            if(Input.GetKeyDown(KeyCode.Alpha8)) SetScenario(OutlineScenario.SlowPressure);
+            if(Input.GetKeyDown(KeyCode.Alpha9)) SetScenario(OutlineScenario.ChaosEvent);
 #endif
         }
 
-        public static void SetScenario(OutlineScenario scenario) => _scenario = scenario;
+        public static void SetScenario(OutlineScenario scenario)
+        {
+            _sketchActive = false;
+            _scenarioVersion++;
+            _scenario = scenario;
+        }
+
+        public static void SetSketchProgress(float progress)
+        {
+            SetColor(ColorMode.Cold);
+            SetBreath(progress > 0.5f ? ColorBreath.Medium : ColorBreath.Soft);
+            // Keep the response continuous instead of starting random flash sequences.
+            SetScenario(OutlineScenario.Idle);
+            _sketchActive = true;
+            var target = Mathf.Lerp(0.55f, 0.15f, Mathf.SmoothStep(0f, 1f, progress));
+            _currentStrength = Mathf.Lerp(_currentStrength, target, 1f - Mathf.Exp(-Time.deltaTime * 10f));
+            SetOutline(_currentStrength);
+        }
+        public static void SetWorldRecovery(float value) => _worldRecovery = Mathf.Clamp01(value);
+
         public static void SetColor(ColorMode mode) => _colorMode = mode;
         public static void SetBreath(ColorBreath breath) => _colorBreath = breath;
 
         public static void OnDisable()
         {
             _disable = true;
+            _scenarioVersion++;
+            _sketchActive = false;
 
-            SSHStyleManager.API.Outline.SetColorOutlineStrength(_baseStrength);
+            SSHStyleManager.API.Outline.SetColorOutlineStrength(ToOutlineThreshold(_baseStrength));
             SSHStyleManager.API.Outline.SetColorOutlineColor(baseColor);
         }
     }

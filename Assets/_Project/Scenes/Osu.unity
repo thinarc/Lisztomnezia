@@ -3469,7 +3469,7 @@ MonoBehaviour:
   positioner: {fileID: 1736930217}
   disableImport: 1
   import: {fileID: 1281405125}
-  hitDelay: 0.4
+  hitDelay: 0.7
   bassTreshold: 0.8
   bassDamping: 36
   disableBass: 0

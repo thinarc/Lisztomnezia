@@ -32,7 +32,7 @@ namespace _Project.Scripts.Effects
             OutlineMover.SetColor(OutlineMover.ColorMode.Horror);
             OutlineMover.SetScenario(OutlineMover.OutlineScenario.HorrorFlash);
 
-            await UniTask.Delay(1200);
+            await UniTask.Delay(400);
 
             OutlineMover.SetScenario(OutlineMover.OutlineScenario.StressPulse);
         }
@@ -47,7 +47,7 @@ namespace _Project.Scripts.Effects
 
             OutlineMover.SetScenario(OutlineMover.OutlineScenario.HorrorFlash);
 
-            await UniTask.Delay(800);
+            await UniTask.Delay(350);
 
             OutlineMover.SetScenario(OutlineMover.OutlineScenario.StressPulse);
         }

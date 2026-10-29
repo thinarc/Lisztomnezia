@@ -16,8 +16,15 @@ namespace _Project.Scripts.Common.EntryPoints
         
         [SerializeField] private StartOptions startOptions;
         
-        public TextMeshProUGUI xClick;
-        private int _startClicks;
+        public TextMeshProUGUI xClick; // Optional legacy label; safe to remove from the scene.
+        [SerializeField] private TMP_FontAsset holdHintFont;
+        [SerializeField, Min(0.2f)] private float startHoldDuration = 1.4f;
+        private float _startHold;
+        private HoldStartIndicator _holdIndicator;
+        private GameObject _holdPrompt;
+        private CanvasGroup _hintGroup;
+        private TextMeshProUGUI _hintLabel;
+        private float _hintAge;
         private bool _startingGame;
         private bool _gameStarted;
         private GameObject[] _presentationRoots;
@@ -33,7 +40,25 @@ namespace _Project.Scripts.Common.EntryPoints
 
         private void Update()
         {
-            if (!BootstrapEntryPoint.IsPaused && _startClicks < 3 && Input.GetMouseButtonDown(0)) RegisterStartClick();
+            if (!_startingGame && _holdIndicator != null)
+            {
+                var available = startOptions.TitleIntroFinished && !BootstrapEntryPoint.IsPaused && Application.isFocused;
+                _holdPrompt.SetActive(available);
+                if (available)
+                {
+                    _hintAge += Time.unscaledDeltaTime;
+                    _hintGroup.alpha = Mathf.SmoothStep(0f,1f,Mathf.Clamp01(_hintAge / 0.4f));
+                    _hintLabel.maxVisibleCharacters = Mathf.Max(0,Mathf.FloorToInt((_hintAge - 0.35f) * 35f));
+                }
+                var held = available && (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space));
+                _startHold = held ? Mathf.Min(_startHold + Time.unscaledDeltaTime, startHoldDuration) : 0f;
+                _holdIndicator.SetProgress(_startHold / startHoldDuration);
+                var entrance = Mathf.SmoothStep(0f,1f,Mathf.Clamp01(_hintAge / 0.45f));
+                var targetScale = Mathf.Lerp(0.92f,1f,entrance) + (held ? 0.025f : 0f);
+                _holdIndicator.transform.localScale = Vector3.Lerp(_holdIndicator.transform.localScale,
+                    Vector3.one * targetScale, 1f-Mathf.Exp(-Time.unscaledDeltaTime*14f));
+                if (_startHold >= startHoldDuration) StartGame().Forget();
+            }
             UpdateMenuPhysics();
         }
 
@@ -56,14 +81,31 @@ namespace _Project.Scripts.Common.EntryPoints
             }
         }
 
-        private void RegisterStartClick()
+        private void CreateHoldPrompt()
         {
-            if (BootstrapEntryPoint.IsPaused || _startClicks >= 3) return;
-            _startClicks++;
-            xClick.text = $"({3 - _startClicks}x)";
-            if (_startClicks == 3) StartGame().Forget();
+            _holdPrompt = new GameObject("Hold to enter", typeof(RectTransform), typeof(Canvas), typeof(UnityEngine.UI.CanvasScaler), typeof(CanvasGroup));
+            _holdPrompt.transform.SetParent(transform, false);
+            _hintGroup = _holdPrompt.GetComponent<CanvasGroup>();
+            _hintGroup.alpha = 0f; _hintGroup.blocksRaycasts = false;
+            var canvas = _holdPrompt.GetComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.sortingOrder = 800;
+            var scaler = _holdPrompt.GetComponent<UnityEngine.UI.CanvasScaler>();
+            scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920,1080); scaler.matchWidthOrHeight = 0.5f;
+            var circle = new GameObject("Hold ring", typeof(RectTransform), typeof(HoldStartIndicator));
+            circle.transform.SetParent(_holdPrompt.transform,false);
+            _holdIndicator = circle.GetComponent<HoldStartIndicator>(); _holdIndicator.raycastTarget=false;
+            var rect = circle.GetComponent<RectTransform>(); rect.anchorMin=rect.anchorMax=new Vector2(0,0.5f);
+            rect.anchoredPosition=new Vector2(115,0); rect.sizeDelta=new Vector2(84,84);
+            var text = new GameObject("Hold hint",typeof(RectTransform),typeof(TextMeshProUGUI));
+            text.transform.SetParent(_holdPrompt.transform,false);
+            var label=text.GetComponent<TextMeshProUGUI>(); _hintLabel=label; label.maxVisibleCharacters=0; label.font=holdHintFont != null ? holdHintFont : TMP_Settings.defaultFontAsset; label.fontSize=21;
+            label.color=new Color(0.78f,0.82f,0.73f,0.85f); label.raycastTarget=false;
+            label.text="HOLD TO ENTER\n<size=14>LMB  /  SPACE</size>";
+            var tr=label.rectTransform; tr.anchorMin=tr.anchorMax=new Vector2(0,0.5f); tr.pivot=new Vector2(0,0.5f);
+            tr.anchoredPosition=new Vector2(174,0); tr.sizeDelta=new Vector2(270,80);
         }
-        
+
         private void Start()
         {
             Instance = this;
@@ -82,15 +124,17 @@ namespace _Project.Scripts.Common.EntryPoints
             StartOptions = startOptions;
             startOptions.SetVisible(false);
 
-            xClick.text = "(3x)";
-            xClick.DOFade(0, 0f).OnComplete(() => xClick.DOFade(1, 1f).SetEase(Ease.OutExpo));
+            if (xClick != null) xClick.gameObject.SetActive(false);
+            CreateHoldPrompt();
+            _holdPrompt.SetActive(false);
         }
 
         private async UniTask StartGame()
         {
             if (_startingGame) return;
             _startingGame = true;
-            xClick.enabled = false;
+            _holdPrompt.SetActive(false);
+            if (xClick != null) xClick.gameObject.SetActive(false);
             Cursor.visible = false;
             await startOptions.PlayTitleExit();
             if (this == null) return;

@@ -50,11 +50,16 @@ namespace _Project.Scripts.osu_
         
         private float _bassValue;
         private bool _bassUsed;
+        private bool _bassPending;
+        private bool _snarePending;
         
         private float _snareValue;
         private bool _snareUsed;
 
         private float _hitDelay;
+        private float _snareHitDelay;
+        private float _baseHitDelay;
+        public int Difficulty { get; private set; } = 1;
         private int _hitCounts;
         private int _hitLimit;
         private bool _run;
@@ -78,6 +83,8 @@ namespace _Project.Scripts.osu_
         public void Initialize()
         {
             Instance = this;
+            _baseHitDelay = hitDelay;
+            _read = true;
             
             transition.material.SetFloat("_FadingFade", 0);
             transition.material.SetFloat("_GaussianBlurFade", 0);
@@ -114,19 +121,8 @@ namespace _Project.Scripts.osu_
         
         public async UniTask RunGame(int level)
         {
-            if (level == 2)
-            {
-                disableBass = true;
-                disableSnare = false;
-                hitDelay /= 2f;
-            }
-            else if (level == 3)
-            {
-                disableBass = false;
-                disableSnare = false;
-                hitDelay *= 2f;
-            }
-            
+            ConfigureDifficulty(level);
+
             lvlImage.sprite = lvlSprites[level - 1];
 
             SoundManager.Instance.OsuHandleCase.SStartOsu().Forget();
@@ -212,11 +208,16 @@ namespace _Project.Scripts.osu_
                     
                     _fill = true;
 
+                    ResetBeatDetection();
                     if (res) await UniTask.Delay(500);
                     SoundManager.Instance.OsuCase.RepLevel();
                     await RepeatTransition();
                     for (var i = 0; i < hitsParent.childCount; i++) Destroy(hitsParent.GetChild(i).gameObject);
                     SetReadSpectrum(true);
+                    _bassValue = _snareValue = 0f;
+                    _bassUsed = _snareUsed = false;
+            _bassPending = _snarePending = false;
+                    _hitDelay = _snareHitDelay = 0f;
                     _fail = false;
                     _slider = 0;
                     _fillCalled = false;
@@ -307,6 +308,27 @@ namespace _Project.Scripts.osu_
             }
         }
 
+        private void ConfigureDifficulty(int level)
+        {
+            Difficulty = Mathf.Clamp(level,1,3);
+            disableBass = level == 2;
+            disableSnare = false;
+            hitDelay = _baseHitDelay * (level == 3 ? 0.3f : level == 2 ? 0.5f : 1f);
+            _hitDelay = _snareHitDelay = 0f;
+            _bassValue = _snareValue = 0f;
+            _bassUsed = _snareUsed = false;
+            _bassPending = _snarePending = false;
+            _read = true;
+            ResetBeatDetection();
+
+        }
+
+        private void ResetBeatDetection()
+        {
+            foreach (var detector in FindObjectsByType<BeatDetection>(FindObjectsSortMode.None))
+                if (detector.gameObject.scene == gameObject.scene) detector.ConfigureDifficulty(Difficulty);
+        }
+
         private bool _read;
 
         public async void SetReadSpectrum(bool read)
@@ -317,15 +339,17 @@ namespace _Project.Scripts.osu_
         public void OnBass()
         {
             if (_fail) return;
-            if (!_run || disableBass && _read) return;
+            if (!_run || !_read || disableBass) return;
             _bassValue = 1f;
+            _bassPending = true;
         }
 
         public void OnSnare()
         {
             if (_fail) return;
-            if (!_run || disableSnare && _read) return;
+            if (!_run || !_read || disableSnare) return;
             _snareValue = 1f;
+            _snarePending = true;
         }
 
         [Button] public void KickSlider()
@@ -379,9 +403,8 @@ namespace _Project.Scripts.osu_
             _bassValue = Mathf.Lerp(_bassValue, 0f, bassDamping * Time.deltaTime);
             _snareValue = Mathf.Lerp(_snareValue, 0f, snareDamping * Time.deltaTime);
 
-            if (_bassValue > bassTreshold && !_bassUsed && _hitDelay < 0)
+            if (_run && !_fail && _read && _bassPending && _hitDelay <= 0)
             {
-                _hitDelay = hitDelay;
                 _hitDelay = hitDelay;
                 _hitCounts++;
                 
@@ -398,15 +421,15 @@ namespace _Project.Scripts.osu_
                 if (_hitCounts >= _hitLimit) _hitCounts = 0;
             }
             
-            if (_snareValue > snareTreshold && !_snareUsed && _hitDelay < 0)
+            if (_run && !_fail && _read && _snarePending && _snareHitDelay <= 0)
             {
-                _hitDelay = hitDelay;
-                _hitDelay = hitDelay;
+                _snareHitDelay = hitDelay;
                 _hitCounts++;
                 
                 var pos = positioner.GetNextPosition(true);
                 var prefabIndex = 0;
-                if (_snareValue > snareTailTreshold) prefabIndex = 1;
+                if (_snareValue > snareTailTreshold && snarePrefabs.Length > 1
+                    && _hitCounts % (Difficulty == 3 ? 4 : 3) == 0) prefabIndex = 1;
                 var hit = Instantiate(snarePrefabs[prefabIndex], hitsParent);
                 var rect = hit.GetComponent<RectTransform>();
                 rect.anchoredPosition = pos;
@@ -426,10 +449,13 @@ namespace _Project.Scripts.osu_
 
             if (_hitDelay < -0.9f) _hitCounts = 0;
 
+            // Consume callbacks once; visual damping must not erase beats at low FPS.
+            _bassPending = _snarePending = false;
             _bassUsed = _bassValue > bassTreshold;
             _snareUsed = _snareValue > snareTreshold;
             
             _hitDelay -= Time.deltaTime;
+            _snareHitDelay -= Time.deltaTime;
         }
 
         private async UniTask WaitRepeat()

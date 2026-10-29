@@ -8,13 +8,14 @@ namespace _Project.Scripts.Diary
         
         private void OnTriggerStay(Collider other)
         {
-            if (secondTrigger) return;
-            if (other.CompareTag("Diary")) DiaryController.Instance.FillDraw();
+            if (!other.CompareTag("Diary")) return;
+            if (secondTrigger) DiaryController.Instance.EnterDraw();
+            else DiaryController.Instance.FillDraw();
         }
         
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Diary")) DiaryController.Instance.EnterDraw();
+            if (secondTrigger && other.CompareTag("Diary")) DiaryController.Instance.EnterDraw();
         }
         
         private void OnTriggerExit(Collider other)

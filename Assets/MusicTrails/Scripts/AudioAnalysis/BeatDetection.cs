@@ -36,6 +36,29 @@ public class BeatDetection : MonoBehaviour
 
     public UnityEvent OnBeat;
     private float lastBeatTime;
+    private float _baseThresholdMultiplier;
+    private float _baseMinimumDeviation;
+    private int _baseWindow;
+    private bool _configured;
+
+    public void ConfigureDifficulty(int difficulty)
+    {
+        if (!_configured)
+        {
+            _baseThresholdMultiplier = thresholdMultiplier;
+            _baseMinimumDeviation = minStandardDeviation;
+            _baseWindow = spectralWindowSize;
+            _configured = true;
+        }
+        thresholdMultiplier = Mathf.Min(_baseThresholdMultiplier, difficulty == 3 ? 1.1f : 1.8f);
+        minStandardDeviation = _baseMinimumDeviation * (difficulty == 3 ? 0.25f : 1f);
+        spectralWindowSize = Mathf.Min(_baseWindow, difficulty == 3 ? 64 : 100);
+        previousSpectrum = null;
+        spectralFluxList.Clear();
+        lastBeatTime = float.NegativeInfinity;
+        isListFilled = false;
+        StopAllCoroutines();
+    }
     
     // Info Fields
     public float[] SpectralFluxData { get; private set; }
@@ -44,6 +67,7 @@ public class BeatDetection : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_Project.Scripts.Common.EntryPoints.BootstrapEntryPoint.IsPaused) return;
         // Get the samples
         if (analyzeGlobal)
         {
@@ -176,7 +200,9 @@ public class BeatDetection : MonoBehaviour
 
     private IEnumerator NotifyOnBeat(SpectralFluxData spectralFluxData)
     {
-        yield return new WaitForSeconds(Mathf.Max(0f, spectralFluxData.time + GameManager.Instance.Delay - Time.time));
+        // FMOD analysis reads the sound already being heard, not a look-ahead AudioSource.
+        var delay = _Project.Scripts.Sound.FmodSpectrumProvider.Instance != null ? 0f : GameManager.Instance.Delay;
+        if (delay > 0f) yield return new WaitForSeconds(Mathf.Max(0f, spectralFluxData.time + delay - Time.time));
         OnBeat?.Invoke();
     }
 

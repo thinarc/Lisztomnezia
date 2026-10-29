@@ -11,6 +11,11 @@ namespace _Project.Scripts.Sound
         private string level = "event:/QTE Sound/Loosing Myself";
 
         public void Initialize() { }
+        public bool TryGetChannelGroup(out FMOD.ChannelGroup group)
+        {
+            group = default;
+            return _case.isValid() && _case.getChannelGroup(out group) == FMOD.RESULT.OK;
+        }
         public void StartLevel(int lvl)
         {
             level = lvl switch

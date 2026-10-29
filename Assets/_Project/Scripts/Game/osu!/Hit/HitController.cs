@@ -58,12 +58,17 @@ namespace _Project.Scripts.osu_.Hit
             _group.DOFade(0, 0);
             paceCore.DOFade(0, 0);
             pace.DOScale(3, 0);
+            var difficulty = OsuController.Instance != null ? OsuController.Instance.Difficulty : 1;
+            if (difficulty == 3) { duration *= 0.75f; durationCheck = 1.25f; checkOk = 1.08f; }
+            else if (difficulty == 2) { duration *= 0.9f; durationCheck = 1.45f; checkOk = 1.2f; }
             ProcessButton();
         }
 
         private async void Miss()
         {
+            if (_miss) return;
             _miss = true;
+            _run = false;
             OsuController.Instance.KickSlider();
             SoundManager.Instance.OsuHandleCase.SFail();
             
@@ -83,6 +88,7 @@ namespace _Project.Scripts.osu_.Hit
         {
             if (_Project.Scripts.Common.EntryPoints.BootstrapEntryPoint.IsPaused || !_run) return;
 
+            _run = false; // One judgement per note, including sliders.
             var meh = false;
             
             if (pace.localScale.x > 0.85f && pace.localScale.x < durationCheck)
@@ -126,10 +132,11 @@ namespace _Project.Scripts.osu_.Hit
             endTail[0].GetComponent<CanvasGroup>().DOFade(0, tailDuration).SetEase(Ease.InSine);
             
             await UniTask.Delay(TimeSpan.FromSeconds(tailDuration / 3.33f));
-            if (_dropped) Miss();
+            if (_dropped || !Input.GetMouseButton(0)) { Miss(); return; }
             
             await UniTask.Delay(TimeSpan.FromSeconds(tailDuration / 3.076f));
             
+            if (_dropped || !Input.GetMouseButton(0)) { Miss(); return; }
             if (paceScale < checkOk) passText[0].gameObject.SetActive(true);
             else passText[1].gameObject.SetActive(true);
             

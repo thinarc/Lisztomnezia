@@ -1,4 +1,5 @@
 using _Project.Scripts.Effects;
+using _Project.Scripts.Sense;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.Utilities;
@@ -19,6 +20,10 @@ namespace _Project.Scripts.Diary
         [SerializeField] private float drawSpeedMulti = 1f;
         [SerializeField] private Vector3 trailOffset = new (-2f, 0f, 0f);
         [SerializeField] private float[] dotTimes;
+        [SerializeField, Min(0.01f)] private float organSketchSize = 0.9f;
+        [SerializeField] private Material organInkMaterial;
+        [SerializeField] private Material organSplatterMaterial;
+        private OrganSketch _organSketch;
         
         private Animator _anim;
         
@@ -27,12 +32,15 @@ namespace _Project.Scripts.Diary
         
         private float _z;
 
+        private System.Action<float> _onDrawProgress;
         private bool _completed;
         private bool _exit;
 
         private void Start()
         {
             Instance = this;
+            if (_Project.Scripts.Sense.SenseManager.Instance == null)
+                gameObject.AddComponent<_Project.Scripts.Sense.SenseManager>();
             _anim = GetComponent<Animator>();
             
             _z = cursor.position.z;
@@ -55,52 +63,65 @@ namespace _Project.Scripts.Diary
             else if (Input.GetKeyUp(KeyCode.Mouse0)) TrailEmitting(false);
             if (!Input.GetKey(KeyCode.Mouse0) || !_drawZone)
             {
-                drawSpeedMulti -= Time.deltaTime * 16f;
-                drawSpeedMulti = Mathf.Clamp(drawSpeedMulti, 1f, drawSpeedMulti);
+                drawSpeedMulti -= Time.deltaTime * 4f;
+                drawSpeedMulti = Mathf.Clamp(drawSpeedMulti, 1f, 12f);
                 _anim.SetFloat("DrawSpeed", Mathf.Clamp(drawSpeedMulti, 1f, 16f));
                 _anim.SetBool("Draw", false);
             }
 
-            _cursorDir = _isOpen? new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) : Vector2.zero;
+            if (_isOpen && !_completed)
+                OutlineMover.SetSketchProgress(Mathf.InverseLerp(1f, 12f, drawSpeedMulti));
+
+            TrailEmitting(Input.GetKey(KeyCode.Mouse0) && _drawZone);
+            _cursorDir = _isOpen ? new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) : Vector2.zero;
         }
 
         public async void FillDraw()
         {
+            if (!_isOpen || _completed) return;
             var fire = Input.GetKey(KeyCode.Mouse0);
             _anim.SetBool("Draw", fire);
             _drawZone = true;
-            cursorSpeed = Mathf.Clamp(cursorSpeed, cursorSpeed * 1.004f, cursorSpeed * 100f);
+            cursorSpeed = _startCursorSpeed;
             
             if (!fire) return;
-            drawSpeedMulti += Time.deltaTime * 2.6f;
+            drawSpeedMulti += Time.deltaTime * 5.5f;
             drawSpeedMulti = Mathf.Clamp(drawSpeedMulti, 1f, 12f);
             _anim.SetFloat("DrawSpeed", Mathf.Clamp(drawSpeedMulti, 1f, 16f));
+            _onDrawProgress?.Invoke(Mathf.InverseLerp(1f, 12f, drawSpeedMulti));
             if (drawSpeedMulti >= 12f && !_completed)
             {
                 _anim.SetTrigger("Rip");
                 _completed = true;
+                _organSketch?.Update(1f);
+                _onDrawProgress?.Invoke(1f);
+                OutlineMover.CatchRabbit();
                 
                 for (var i = 0; i < drawDots.Length; i++)
                 {
                     dotTimes[i] = drawDots[i].time;
                 }
 
-                var b = 0;
-                while (true)
+                // Fade all strokes together before the next sketch can begin.
+                for (var step = 0; step < 6 && !_exit; step++)
                 {
-                    if (b > 5) break;
-                    b++;
-                    
-                    foreach (var dot in drawDots)
-                    {
-                        dot.time /= Random.Range(1.2f, 2f);
-                        await UniTask.DelayFrame(10);
-                    }
+                    foreach (var dot in drawDots) dot.time *= 0.6f;
+                    _organSketch?.Fade(1f - (step + 1f) / 6f);
+                    await UniTask.Delay(50);
                 }
             }
         }
 
         public void Completed() => _exit = true;
+
+        private void LateUpdate()
+        {
+            if (_isOpen && !_completed && !_Project.Scripts.Common.EntryPoints.BootstrapEntryPoint.IsPaused)
+            {
+                if (_drawZone && Input.GetKey(KeyCode.Mouse0)) _organSketch?.Record();
+                _organSketch?.Update(Mathf.InverseLerp(1f, 12f, drawSpeedMulti));
+            }
+        }
 
         private bool _drawZone;
         public void DropDraw()
@@ -113,7 +134,7 @@ namespace _Project.Scripts.Diary
         public void DropDrawZone()
         {
             if (!_isOpen || !_isMore) return;
-            _anim.SetTrigger("Transition");
+            _anim.SetBool("Focused", false);
             _isMore = false;
             _z = cursor.position.z;
             TrailEmitting(false);
@@ -125,11 +146,11 @@ namespace _Project.Scripts.Diary
         public void EnterDraw()
         {
             if (!_isOpen || _isMore) return;
-            _anim.SetTrigger("Transition");
+            _anim.SetBool("Focused", true);
             _isMore = true;
             _z = cursor.position.z;
             TrailEmitting(false);
-            NarrativeOutlineDirector.IntensifyRabbitSketch();
+            // Outline intensity follows drawing progress in Update.
                 
             if (!_isMore) OffsetTrail(false);
             else OffsetTrail(true);
@@ -164,8 +185,9 @@ namespace _Project.Scripts.Diary
             var min = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.WorldToScreenPoint(pos).z));
             var max = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.WorldToScreenPoint(pos).z));
             
-            pos.x = Mathf.Clamp(pos.x, min.x, max.x);
-            pos.y = Mathf.Clamp(pos.y, min.y, max.y);
+            var tipOffset = drawDots.Length > 0 ? drawDots[0].transform.position - cursor.position : Vector3.zero;
+            pos.x = Mathf.Clamp(pos.x, min.x - tipOffset.x, max.x - tipOffset.x);
+            pos.y = Mathf.Clamp(pos.y, min.y - tipOffset.y, max.y - tipOffset.y);
             pos.z = _z;
 
             cursor.MovePosition(pos);
@@ -173,7 +195,8 @@ namespace _Project.Scripts.Diary
 
         private void TrailEmitting(bool emit)
         {
-            drawDots.ForEach(dot => dot.emitting = emit);
+            drawDots.ForEach(dot => dot.emitting = emit && _isOpen && !_completed
+                && _organSketch == null);
         }
 
         private async void OffsetTrail(bool inversedOffset)
@@ -183,33 +206,37 @@ namespace _Project.Scripts.Diary
             var offset = trailOffset;
             if (inversedOffset) offset = -offset;
 
-            var t = 0;
-            while (t < 42)
+            const float duration = 0.7f;
+            var elapsed = 0f;
+            while (elapsed < duration)
             {
+                await UniTask.NextFrame();
+                var step = Mathf.Min(Time.deltaTime, duration - elapsed);
+                elapsed += step;
+                _organSketch?.Offset(offset * (step / duration));
                 foreach (var trail in drawDots)
                 {
                     var count = trail.positionCount;
-                    if (count == 0) return;
-
+                    if (count == 0) continue;
                     var positions = new Vector3[count];
                     trail.GetPositions(positions);
-
                     for (var i = 0; i < count; i++)
-                        positions[i] += offset / 42;
-
+                        positions[i] += offset * (step / duration);
                     trail.SetPositions(positions);
-                    t++;
-
-                    await UniTask.NextFrame();
                 }
             }
         }
 
-        public async UniTask EnterDiary()
+        public async UniTask EnterDiary(System.Action<float> onDrawProgress = null,
+            RabbitType rabbitType = RabbitType.Vision)
         {
+            _onDrawProgress = onDrawProgress;
+            _isMore = false;
+            _anim.SetBool("Focused", false);
             _anim.SetTrigger("Enter");
             _isOpen = true;
             NarrativeOutlineDirector.StartRabbitSketch();
+            OutlineMover.SetSketchProgress(0f);
             
             cursor.transform.localPosition = Vector3.zero;
             if (dotTimes.Length > 0)
@@ -220,23 +247,29 @@ namespace _Project.Scripts.Diary
                 }
             }
             else dotTimes = new float[drawDots.Length];
+            _organSketch = new OrganSketch(drawDots, rabbitType, organSketchSize, transform.Find("left/notepad")?.GetComponent<SpriteRenderer>(), organInkMaterial, organSplatterMaterial);
             
             await UniTask.WaitUntil(() => _exit);
-            _anim.ResetTrigger("Transition");
+            _anim.SetBool("Focused", false);
             _anim.SetBool("Draw", false);
             _anim.SetTrigger("Exit");
+            TrailEmitting(false);
+            foreach (var dot in drawDots) dot.Clear();
+            _organSketch.Restore();
+            _organSketch = null;
             _kick = false;
             _isMore = false;
             _drawZone = false;
             drawSpeedMulti = 1f;
             cursorSpeed = _startCursorSpeed;
             
+            _onDrawProgress = null;
             _completed = false;
             _isOpen = false;
             _exit = false;
             
-            if (Random.Range(0, 2) == 1) await NarrativeOutlineDirector.FinishRabbitSketch();
-            else await NarrativeOutlineDirector.KillEvent();
+            // The catch accent starts with Rip, rather than after the animation.
+            await UniTask.Delay(150);
             NarrativeOutlineDirector.ReturnToCalm();
         }
     }

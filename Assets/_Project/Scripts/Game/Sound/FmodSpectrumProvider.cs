@@ -35,6 +35,15 @@ namespace _Project.Scripts.Sound
 
         void Update()
         {
+            if (!_fft.hasHandle()) return;
+            var sound = _Project.Scripts.Managers.SoundManager.Instance;
+            if (sound != null && sound.OsuCase != null && sound.OsuCase.TryGetChannelGroup(out var music)
+                && music.handle != _channelGroup.handle)
+            {
+                if (_channelGroup.hasHandle()) _channelGroup.removeDSP(_fft);
+                _channelGroup = music;
+                _channelGroup.addDSP(0, _fft);
+            }
             IntPtr data;
             uint length;
 
@@ -44,7 +53,13 @@ namespace _Project.Scripts.Sound
 
             _fftData = Marshal.PtrToStructure<DSP_PARAMETER_FFT>(data);
 
-            if (_fftData.spectrum.Length > 0) Spectrum = _fftData.spectrum[0]; // левый канал
+            if (_fftData.spectrum != null && _fftData.spectrum.Length > 0) Spectrum = _fftData.spectrum[0]; // левый канал
+        }
+        private void OnDestroy()
+        {
+            if (_channelGroup.hasHandle() && _fft.hasHandle()) _channelGroup.removeDSP(_fft);
+            if (_fft.hasHandle()) _fft.release();
+            if (Instance == this) Instance = null;
         }
     }
 }

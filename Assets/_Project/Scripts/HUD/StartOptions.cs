@@ -31,6 +31,16 @@ namespace _Project.Scripts.HUD
         private Vector3[] _authorsBeforePause;
         private float _logoBeforePause;
 
+        public bool TitleIntroFinished
+        {
+            get
+            {
+                var animator = logo.GetComponent<Animator>();
+                return animator == null || !animator.enabled ||
+                    (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f && !animator.IsInTransition(0));
+            }
+        }
+
         private void Awake()
         {
             transform.localScale = Vector3.one;

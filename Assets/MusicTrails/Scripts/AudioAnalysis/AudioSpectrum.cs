@@ -32,6 +32,15 @@ public class AudioSpectrum : MonoBehaviour
     private void Start()
     {
         gameManager = GameManager.Instance;
+        // Unity audio is disabled in this FMOD project.
+        var sampleRate = 48000;
+        if (FmodSpectrumProvider.Instance != null)
+        {
+            var result = FMODUnity.RuntimeManager.CoreSystem.getSoftwareFormat(out var fmodSampleRate, out _, out _);
+            if (result == FMOD.RESULT.OK && fmodSampleRate > 0)
+                sampleRate = fmodSampleRate;
+        }
+        SAMPLE_RATE = sampleRate / 2;
 
         AddFrequencyBand(FrequencyBandName.SubBass, 20, 60);
         AddFrequencyBand(FrequencyBandName.Bass, 60, 250);
@@ -52,7 +61,9 @@ public class AudioSpectrum : MonoBehaviour
             print("No Audio Spectrum Provider");
             return;
         }
-        samples = FmodSpectrumProvider.Instance.Spectrum;
+        var spectrum = FmodSpectrumProvider.Instance.Spectrum;
+        if (spectrum == null || spectrum.Length == 0 || gameManager == null) return;
+        samples = spectrum;
         UpdateFrequenciesValues();
     }
 
@@ -88,7 +99,7 @@ public class AudioSpectrum : MonoBehaviour
             int startSampleIndex = GetSampleIndex(frequencyBand.MinFrequency);
             int endSampleIndex = GetSampleIndex(frequencyBand.MaxFrequency);
 
-            int diff = endSampleIndex - startSampleIndex;
+            int diff = Mathf.Max(1, endSampleIndex - startSampleIndex);
 
             // Sum all values and calculate the average
             float sum = 0;
@@ -108,15 +119,8 @@ public class AudioSpectrum : MonoBehaviour
 
     public int GetSampleIndex(float frequency)
     {
-        try
-        {
-            float HzPerSample = SAMPLE_RATE / samples.Length;
-            return Mathf.Max(0, (int)(frequency / HzPerSample) - 1);
-        }
-        catch
-        {
-            return -1;
-        }
+        if (samples == null || samples.Length == 0 || SAMPLE_RATE <= 0) return 0;
+        return Mathf.Clamp(Mathf.FloorToInt(frequency * samples.Length / SAMPLE_RATE), 0, samples.Length - 1);
     }
 
     public float GetFrequencyBandValue(FrequencyBandName frequencyBand)
@@ -164,8 +168,8 @@ public class AudioSpectrum : MonoBehaviour
     /// <param name="band">The band of samples</param>
     public void GetSamplesMultiplied(out float[] samples, FrequencyBandName band)
     {
-        int i = frequencies[band].MinFrequency;
-        int j = frequencies[band].MaxFrequency;
+        int i = GetSampleIndex(frequencies[band].MinFrequency);
+        int j = GetSampleIndex(frequencies[band].MaxFrequency);
 
         if (this.samples == null)
         {
